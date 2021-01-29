@@ -92,12 +92,12 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getLeftDriveEncoderDistance() {
-        final double driveEncoderCountsPerFoot = 1;
+        final double driveEncoderCountsPerFoot = 1.0;
 		return (getLeftDriveEncoderCount() / (driveEncoderCountsPerFoot)) * 12;
 	}
 
     public double getRightDriveEncoderDistance() {
-        final double driveEncoderCountsPerFoot = 1;
+        final double driveEncoderCountsPerFoot = 1.0;
 		return (getRightDriveEncoderCount() / (driveEncoderCountsPerFoot)) * 12;
 	}
 
