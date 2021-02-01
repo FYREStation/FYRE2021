@@ -75,6 +75,10 @@ public class Drivetrain extends SubsystemBase {
         //System.out.println("RIGHT DRIVE: " + (getRightDriveEncoderCount()));
     }
 
+    public void tankDrive(double moveSpeedLeft, double moveSpeedRight) {
+        differentialDrive.tankDrive(moveSpeedLeft, moveSpeedRight);
+    }
+
     public double getLeftDriveEncoderCount() {
         return LeftDriveEncoder.get();
     }

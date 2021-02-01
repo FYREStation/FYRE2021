@@ -17,6 +17,7 @@ import frc.robot.commands.ControlledShooting;
 import frc.robot.commands.DriveArcade;
 import frc.robot.commands.DriveForwardAutoNoPID;
 import frc.robot.commands.DriveForwardAutoPID;
+import frc.robot.commands.DriveStraight;
 import frc.robot.commands.DriveUAuto;
 import frc.robot.commands.GetGameColor;
 import frc.robot.commands.IntakeDown;
@@ -109,7 +110,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    
+
+    DriveStraight driveObject = new DriveStraight(RobotContainer.m_drivetrain);
+    driveBarrel(driveObject);
   }
 
   /**
@@ -160,4 +163,9 @@ public class Robot extends TimedRobot {
     TestWinch returnWinchObject = new TestWinch();
     returnWinchObject.execute();
   }
+
+  public void driveBarrel(DriveStraight drivingObject){
+    drivingObject.driveStraightDistance(30, true);
+  }
+  
 }

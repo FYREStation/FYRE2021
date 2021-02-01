@@ -85,6 +85,7 @@ public final class Constants {
 
 
     //Circumference of Control Panel and wheel for Panel
+    public static final double PI = Math.PI;
     public static final double circumPanel = 12 * Math.PI;
     public static final double circumWheel = 4 * Math.PI;
   

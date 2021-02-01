@@ -13,6 +13,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import frc.robot.Constants;
 
 public class DriveStraight extends CommandBase {
 
@@ -76,14 +77,33 @@ public class DriveStraight extends CommandBase {
             }
             
 		}
-    }
+	}
+	
+	/**
+	 * 
+	 * 
+	 * 
+	 * 
+	 * @param radius the radius needs to be a double greater than zero
+	 * @param degree this must be a double between -360.0 and 360.0 and must not be zero.
+	 * @param isForward The direction of the movement is either forward or backwards based on
+	 * if isForward is true or not.
+	 * 
+	 */
 
     public void driveArc(double radius, double degree, boolean isForward){
         double currentPlace = Constants.rightWheelDistance;
-        double destination = currentPlace + distance;
-        
-        double distanceCircum = 2 * Constants.PI * radius * degree / 360; 
+        double destination;
+		double distanceCircum;
+		
+		//This is keeping track of the right wheel's distance traveled
+		if ((isForward && degree > 0) || !(isForward || degree > 0)){
+        	distanceCircum = 2 * Constants.PI * (radius + 15.5) * degree / 360; 
+		}else{
+			distanceCircum = 2 * Constants.PI * (radius -15.5) * degree / 360;
+		}
 
+		destination = currentPlace + distanceCircum;
 
         while(Constants.rightWheelDistance < destination){
             if (isForward){
