@@ -88,7 +88,8 @@ public class DriveStraight extends CommandBase {
 	public void driveStraightDistance(double distance, boolean isForward, double theSpeed){
         double currentPlace = drive_train.getRightDriveEncoderDistance();
         double destination = currentPlace + distance;
-        double speed = theSpeed;
+        //double speed = //input theSpeed into equation to get PWM duty cycle;
+		double speed = theSpeed; //Comment this line when done testing. Input duty cycle on testing day.
 
 		if(isForward){
 			destination =  currentPlace + distance;
@@ -106,6 +107,48 @@ public class DriveStraight extends CommandBase {
 		}
 	}
 
+	//This is the nonoverloaded version. Should not be used after testing day.
+	public void driveArc(double radius, double degree, boolean isForward){
+        double currentPlace = drive_train.getRightDriveEncoderDistance();
+        double destination;
+		double distanceRightArc;
+		double distanceLeftArc;
+		double distanceMiddleArc;
+		double realLeftSpeed;
+		double realRightSpeed = 0.4;
+	
+
+		//This is keeping track of the right wheel's distance traveled
+		//This is checking if it forward and counterclockwise or backward and clockwise
+		//(Inside or outside)
+		if ((isForward && degree > 0) || !(isForward || degree > 0)){
+			distanceRightArc = 2 * Constants.PI * (radius + 15.5) * Math.abs(degree) / 360;
+			distanceMiddleArc = 2 * Constants.PI * radius * Math.abs(degree) / 360;
+			distanceLeftArc = 2 * Constants.PI * (radius - 15.5) * Math.abs(degree) / 360;;
+		}else{
+			distanceRightArc = 2 * Constants.PI * (radius -15.5) * Math.abs(degree) / 360;
+			distanceMiddleArc = 2 * Constants.PI * radius * Math.abs(degree) / 360;
+			distanceLeftArc = 2 * Constants.PI * (radius + 15.5) * Math.abs(degree) / 360;
+		}
+
+		realLeftSpeed = realRightSpeed * (distanceLeftArc/distanceRightArc);
+
+		if (isForward){
+			destination = currentPlace + distanceRightArc;
+			while(currentPlace < destination){
+				currentPlace = drive_train.getRightDriveEncoderDistance();
+				drive_train.tankDrive(realLeftSpeed, realRightSpeed);	
+			}
+		}else{
+			destination = currentPlace - distanceRightArc;
+			while(currentPlace > destination){
+				drive_train.tankDrive(-realLeftSpeed, -realRightSpeed);
+				
+			}	
+		}
+	}
+
+
 	/**
 	 * @param radius the radius needs to be a double greater than zero
 	 * @param degree this must be a double between -360.0 and 360.0 and must not be zero.
@@ -114,58 +157,55 @@ public class DriveStraight extends CommandBase {
 	 * 
 	 */
 
-    public void driveArc(double radius, double degree, boolean isForward){
+	public void driveArc(double radius, double degree, boolean isForward, double realSpeed){
         double currentPlace = drive_train.getRightDriveEncoderDistance();
         double destination;
 		double distanceRightArc;
 		double distanceLeftArc;
 		double distanceMiddleArc;
 		double averageRobotSpeed; 
-		double speed = 0.5;
+		double realLeftSpeed;
+		double realRightSpeed;
+		double leftSpeedPWM;
+		double rightSpeedPWM;
+		double speed = realSpeed;
+		double time;
 
 		//This is keeping track of the right wheel's distance traveled
 		//This is checking if it forward and counterclockwise or backward and clockwise
 		//(Inside or outside)
 		if ((isForward && degree > 0) || !(isForward || degree > 0)){
-			distanceRightArc = 2 * Constants.PI * (radius + 15.5) * degree / 360;
-			distanceMiddleArc = 2 * Constants.PI * radius * degree / 360;
-			distanceLeftArc = 2 * Constants.PI * (radius - 15.5) * degree / 360;;
+			distanceRightArc = 2 * Constants.PI * (radius + 15.5) * Math.abs(degree) / 360;
+			distanceMiddleArc = 2 * Constants.PI * radius * Math.abs(degree) / 360;
+			distanceLeftArc = 2 * Constants.PI * (radius - 15.5) * Math.abs(degree) / 360;;
 		}else{
-			distanceRightArc = 2 * Constants.PI * (radius -15.5) * degree / 360;
-			distanceMiddleArc = 2 * Constants.PI * radius * degree / 360;
-			distanceLeftArc = 2 * Constants.PI * (radius + 15.5) * degree / 360;
+			distanceRightArc = 2 * Constants.PI * (radius -15.5) * Math.abs(degree) / 360;
+			distanceMiddleArc = 2 * Constants.PI * radius * Math.abs(degree) / 360;
+			distanceLeftArc = 2 * Constants.PI * (radius + 15.5) * Math.abs(degree) / 360;
 		}
+
+		time = distanceMiddleArc/speed;
+		realLeftSpeed = distanceLeftArc/time;
+		realRightSpeed = distanceRightArc/time;
+		//Note to self and Ryan and others. This needs to be added.
+		leftSpeedPWM = 0; //realLeftSpeed input into PWM equation
+		rightSpeedPWM = 0; //realRightSpeed input into PWM equation
 
 		if (isForward){
 			destination = currentPlace + distanceRightArc;
-			if(degree > 0){
-				while(currentPlace < destination){
-
-					currentPlace = drive_train.getRightDriveEncoderDistance();
-					drive_train.tankDrive(speed, speed);
-				}
-			}else{
-				while(currentPlace < destination){
-
-					currentPlace = drive_train.getRightDriveEncoderDistance();
-					drive_train.tankDrive(0.7, 0.6);
-				}
+			while(currentPlace < destination){
+				currentPlace = drive_train.getRightDriveEncoderDistance();
+				drive_train.tankDrive(leftSpeedPWM, rightSpeedPWM);	
 			}
-			
 		}else{
 			destination = currentPlace - distanceRightArc;
-			if(degree > 0){
-				while(currentPlace > destination){
-					drive_train.tankDrive(-0.60, -0.60);
-				}
-			}else{
-				while(currentPlace > destination){
-					drive_train.tankDrive(-0.60, -0.60);
-				}
-			}
-			
+			while(currentPlace > destination){
+				drive_train.tankDrive(-leftSpeedPWM, -rightSpeedPWM);
+				
+			}	
 		}
+
+
+
 	}
-
-
 }
