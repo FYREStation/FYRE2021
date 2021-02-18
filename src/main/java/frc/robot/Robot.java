@@ -164,15 +164,15 @@ public class Robot extends TimedRobot {
     returnWinchObject.execute();
   }
 
-  //All of these values are currently incorrect.
+  //All of these values are currently correct.
   public void driveBarrel(DriveStraight drivingObject){
-    drivingObject.driveStraightDistance(90, true);
-    drivingObject.driveArc(30, -354.4413274, true);
-    drivingObject.driveStraightDistance(95.39, true);
-    drivingObject.driveArc(21, 309.4413274, true);
-    drivingObject.driveStraightDistance(84.85, true);
-    drivingObject.driveArc(21, 225, true);
-    drivingObject.driveStraightDistance(240, true);
+    drivingObject.driveStraightDistance(90, true, 0.5);
+    drivingObject.driveArc(30, -354.4413274, true, 0.5);
+    drivingObject.driveStraightDistance(95.39, true, 0.5);
+    drivingObject.driveArc(21, 309.4413274, true, 0.5);
+    drivingObject.driveStraightDistance(84.85, true, 0.5);
+    drivingObject.driveArc(21, 225, true, 0.5);
+    drivingObject.driveStraightDistance(240, true, 0.5);
   }
   
   public void driveSlalom(DriveStraight drivingObject){

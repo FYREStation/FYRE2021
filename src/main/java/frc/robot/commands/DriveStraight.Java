@@ -65,25 +65,48 @@ public class DriveStraight extends CommandBase {
 	// subsystems is scheduled to run
 
     public void driveStraightDistance(double distance, boolean isForward){
-        double currentPlace = Constants.rightWheelDistance;
-        double destination = currentPlace + distance;
-        double speed = 0.6;
-
-        while(Constants.rightWheelDistance < destination){
-            if (isForward){
-                drive_train.tankDrive(speed, speed);
-            }else{
-                drive_train.tankDrive(-speed, -speed);
-            }
-            
+        double currentPlace = drive_train.getRightDriveEncoderDistance();
+        double destination;
+		double speed = 0.6;
+		
+		if(isForward){
+			destination =  currentPlace + distance;
+			while(currentPlace < destination){
+				currentPlace = drive_train.getRightDriveEncoderDistance();
+				drive_train.tankDrive(speed, speed);
+			}
+		}else{
+			destination = currentPlace - distance;
+			while(currentPlace > destination){
+				currentPlace = drive_train.getRightDriveEncoderDistance();
+				drive_train.tankDrive(-speed, -speed);
+			
+			}
 		}
 	}
 	
+	public void driveStraightDistance(double distance, boolean isForward, double theSpeed){
+        double currentPlace = drive_train.getRightDriveEncoderDistance();
+        double destination = currentPlace + distance;
+        double speed = theSpeed;
+
+		if(isForward){
+			destination =  currentPlace + distance;
+			while(currentPlace < destination){
+				currentPlace = drive_train.getRightDriveEncoderDistance();
+				drive_train.tankDrive(speed, speed);
+			}
+		}else{
+			destination = currentPlace - distance;
+			while(currentPlace > destination){
+				currentPlace = drive_train.getRightDriveEncoderDistance();
+				drive_train.tankDrive(-speed, -speed);
+			
+			}
+		}
+	}
+
 	/**
-	 * 
-	 * 
-	 * 
-	 * 
 	 * @param radius the radius needs to be a double greater than zero
 	 * @param degree this must be a double between -360.0 and 360.0 and must not be zero.
 	 * @param isForward The direction of the movement is either forward or backwards based on
@@ -92,28 +115,57 @@ public class DriveStraight extends CommandBase {
 	 */
 
     public void driveArc(double radius, double degree, boolean isForward){
-        double currentPlace = Constants.rightWheelDistance;
+        double currentPlace = drive_train.getRightDriveEncoderDistance();
         double destination;
-		double distanceCircum;
-		
+		double distanceRightArc;
+		double distanceLeftArc;
+		double distanceMiddleArc;
+		double averageRobotSpeed; 
+		double speed = 0.5;
+
 		//This is keeping track of the right wheel's distance traveled
+		//This is checking if it forward and counterclockwise or backward and clockwise
+		//(Inside or outside)
 		if ((isForward && degree > 0) || !(isForward || degree > 0)){
-        	distanceCircum = 2 * Constants.PI * (radius + 15.5) * degree / 360; 
+			distanceRightArc = 2 * Constants.PI * (radius + 15.5) * degree / 360;
+			distanceMiddleArc = 2 * Constants.PI * radius * degree / 360;
+			distanceLeftArc = 2 * Constants.PI * (radius - 15.5) * degree / 360;;
 		}else{
-			distanceCircum = 2 * Constants.PI * (radius -15.5) * degree / 360;
+			distanceRightArc = 2 * Constants.PI * (radius -15.5) * degree / 360;
+			distanceMiddleArc = 2 * Constants.PI * radius * degree / 360;
+			distanceLeftArc = 2 * Constants.PI * (radius + 15.5) * degree / 360;
 		}
 
-		destination = currentPlace + distanceCircum;
+		if (isForward){
+			destination = currentPlace + distanceRightArc;
+			if(degree > 0){
+				while(currentPlace < destination){
 
-        while(Constants.rightWheelDistance < destination){
-            if (isForward){
-                drive_train.tankDrive(0.60, 0.60);
-            }else{
-                drive_train.tankDrive(-0.60, 0-.60);
-            }
-            
+					currentPlace = drive_train.getRightDriveEncoderDistance();
+					drive_train.tankDrive(speed, speed);
+				}
+			}else{
+				while(currentPlace < destination){
+
+					currentPlace = drive_train.getRightDriveEncoderDistance();
+					drive_train.tankDrive(0.7, 0.6);
+				}
+			}
+			
+		}else{
+			destination = currentPlace - distanceRightArc;
+			if(degree > 0){
+				while(currentPlace > destination){
+					drive_train.tankDrive(-0.60, -0.60);
+				}
+			}else{
+				while(currentPlace > destination){
+					drive_train.tankDrive(-0.60, -0.60);
+				}
+			}
+			
 		}
-    }
+	}
 
 
 }
