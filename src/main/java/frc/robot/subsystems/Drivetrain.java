@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Constants;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Add your docs here.
  */
@@ -42,7 +42,7 @@ public class Drivetrain extends SubsystemBase {
     
     // Encoders
     private final Encoder LeftDriveEncoder = new Encoder(Constants.DRIVETRAIN_DRIVE_ENCODER_LEFT_A, Constants.DRIVETRAIN_DRIVE_ENCODER_LEFT_B,true,Encoder.EncodingType.k4X);
-    public final Encoder RightDriveEncoder = new Encoder(Constants.DRIVETRAIN_DRIVE_ENCODER_RIGHT_A, Constants.DRIVETRAIN_DRIVE_ENCODER_RIGHT_B,true,Encoder.EncodingType.k4X);
+    private final Encoder RightDriveEncoder = new Encoder(Constants.DRIVETRAIN_DRIVE_ENCODER_RIGHT_A, Constants.DRIVETRAIN_DRIVE_ENCODER_RIGHT_B,true,Encoder.EncodingType.k4X);
     
 	public Drivetrain() {
         //LeftSparksAll.setSafetyEnabled(false);
@@ -53,6 +53,7 @@ public class Drivetrain extends SubsystemBase {
         LeftDriveEncoder.reset();
         RightDriveEncoder.reset();
         LeftDriveEncoder.setDistancePerPulse(Constants.driveCircum/(2048.0));
+        LeftDriveEncoder.setReverseDirection(true);
         RightDriveEncoder.setDistancePerPulse(Constants.driveCircum/(2048.0));
     }
 
@@ -62,8 +63,8 @@ public class Drivetrain extends SubsystemBase {
        
         Constants.leftWheelDistance = (this.LeftDriveEncoder.getDistance());
         Constants.rightWheelDistance = (this.RightDriveEncoder.getDistance());
-        //System.out.println("DisInInches" + this.LeftDriveEncoder.getDistance());
-        System.out.println("DisInInches" + this.RightDriveEncoder.getDistance());
+        System.out.println("DisInInches Left:" + this.LeftDriveEncoder.getDistance());
+        System.out.println("DisInInches Right:" + this.RightDriveEncoder.getDistance());
         //System.out.println("LEFT DRIVE:" + Constants.leftWheelDistance); 
         //System.out.println("RIGHT DRIVE:" + Constants.rightWheelDistance); 
         
@@ -75,16 +76,16 @@ public class Drivetrain extends SubsystemBase {
         //System.out.println("RIGHT DRIVE: " + (getRightDriveEncoderCount()));
     }
 
-    public void tankDrive(double moveSpeedLeft, double moveSpeedRight) {
+    public void tankDriving(double moveSpeedLeft, double moveSpeedRight) {
         differentialDrive.tankDrive(moveSpeedLeft, moveSpeedRight);
     }
 
     public double getLeftDriveEncoderCount() {
-        return LeftDriveEncoder.get();
+        return this.LeftDriveEncoder.get();
     }
 
     public double getRightDriveEncoderCount() {
-        return RightDriveEncoder.get();
+        return this.RightDriveEncoder.get();
     }
 
     public void resetLeftDriveEncoderCount() {
@@ -96,17 +97,21 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getLeftDriveEncoderDistance() {
-        final double driveEncoderCountsPerFoot = 1.0;
-		return (getLeftDriveEncoderCount() / (driveEncoderCountsPerFoot)) * 12;
+		return LeftDriveEncoder.getDistance();
 	}
 
     public double getRightDriveEncoderDistance() {
-        final double driveEncoderCountsPerFoot = 1.0;
-		return (getRightDriveEncoderCount() / (driveEncoderCountsPerFoot)) * 12;
-	}
+        return RightDriveEncoder.getDistance();    
+    }
+
+    public void smartBoardTest(){
+        SmartDashboard.putNumber("LeftEncoder: ", getLeftDriveEncoderDistance());
+        SmartDashboard.putNumber("RightEncoder: ", getRightDriveEncoderDistance());
+        SmartDashboard.updateValues();
+    }
 
     @Override
     public void periodic() {
-    
+        smartBoardTest();
     }
 }

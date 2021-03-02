@@ -18,7 +18,6 @@ import frc.robot.commands.DriveArcade;
 import frc.robot.commands.DriveForwardAutoNoPID;
 import frc.robot.commands.DriveForwardAutoPID;
 import frc.robot.commands.DriveStraight;
-import frc.robot.commands.DriveUAuto;
 import frc.robot.commands.GetGameColor;
 import frc.robot.commands.IntakeDown;
 import frc.robot.commands.IntakeUp;
@@ -29,7 +28,6 @@ import frc.robot.commands.PositionControl;
 import frc.robot.commands.RunLiftDown;
 import frc.robot.commands.RunLiftUp;
 import frc.robot.commands.RunWinch;
-import frc.robot.commands.TestWinch;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.ControlPanel;
 import frc.robot.subsystems.Drivetrain;
@@ -47,7 +45,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
   private DriverStation m_driverStation;
- 
+  
+  private Command driveSlalom;
   /*
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -61,8 +60,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
 
     Camera thisObject = new Camera();
-    
-    
+    driveSlalom = new DriveStraight(RobotContainer.m_drivetrain); 
     
   }
 
@@ -102,6 +100,7 @@ public class Robot extends TimedRobot {
   /**
    * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
    */
+
   @Override
   public void autonomousInit() {
    	m_autonomousCommand = m_robotContainer.getAutonomousCommand();
@@ -110,9 +109,13 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
-    DriveStraight driveObject = new DriveStraight(RobotContainer.m_drivetrain);
-    driveBarrel(driveObject);
+    //What does the above do? Check for next time.
+    if(driveSlalom != null){
+      driveSlalom.schedule();
+    }
+    
+    
+    
   }
 
   /**
@@ -124,8 +127,13 @@ public class Robot extends TimedRobot {
     //autoObjectForStraight.execute();
     //DriveForwardAutoNoPID driverAuto = new DriveForwardAutoNoPID(RobotContainer.m_drivetrain);
     //driverAuto.execute();
-    DriveUAuto uAuto = new DriveUAuto(RobotContainer.m_drivetrain);
-    uAuto.execute();
+    //DriveUAuto uAuto = new DriveUAuto(RobotContainer.m_drivetrain);
+    //uAuto.execute();
+
+    //driveObject.driveStraightDistance(1000, true, 0.80);
+    //driveSlalom(driveObject);
+    //driveObject.driveStraightDistance(90, true, 0.60);
+
   }
 
   @Override
@@ -160,47 +168,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    TestWinch returnWinchObject = new TestWinch();
-    returnWinchObject.execute();
+
   }
 
-  //All of these values are currently correct.
-  public void driveBarrel(DriveStraight drivingObject){
-    drivingObject.driveStraightDistance(90, true, 0.5);
-    drivingObject.driveArc(30, -354.4413274, true);
-    drivingObject.driveStraightDistance(95.39, true, 0.5);
-    drivingObject.driveArc(21, 309.4413274, true);
-    drivingObject.driveStraightDistance(84.85, true, 0.5);
-    drivingObject.driveArc(21, 225, true);
-    drivingObject.driveStraightDistance(240, true, 0.5);
-  }
-  
-  public void driveSlalom(DriveStraight drivingObject){
-    drivingObject.driveArc(30, 90, true);
-    drivingObject.driveArc(30, -90, true);
-    drivingObject.driveStraightDistance(120, true, 0.5);
-    drivingObject.driveArc(30, -90, true);
-    drivingObject.driveArc(30, 360, true);
-    drivingObject.driveArc(30, -90, true);
-    drivingObject.driveStraightDistance(120, true, 0.5);
-    drivingObject.driveArc(30, -90, true);
-    drivingObject.driveArc(30, 90, true);
-  }
-
-  public void driveBounce(DriveStraight drivingObject){
-    drivingObject.driveArc(30, 90, true);
-    drivingObject.driveStraightDistance(30, true, 0.5);
-    drivingObject.driveStraightDistance(30, false, 0.5);
-    drivingObject.driveArc(30, 26.57, false);
-    drivingObject.driveStraightDistance(67.08, false, 0.5);
-    drivingObject.driveArc(30, 153.43, false);
-    drivingObject.driveStraightDistance(90, false, 0.5);    
-    drivingObject.driveStraightDistance(90, true, 0.5);
-    drivingObject.driveArc(30, 90, true);    
-    drivingObject.driveStraightDistance(30, true, 0.5);
-    drivingObject.driveArc(30, 90, true);
-    drivingObject.driveStraightDistance(90, true, 0.5);
-    drivingObject.driveStraightDistance(30, false, 0.5);
-    drivingObject.driveArc(30, 90, false);
-  }
 }

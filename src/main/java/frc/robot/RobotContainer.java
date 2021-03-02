@@ -115,9 +115,11 @@ public class RobotContainer {
     
     
     //This set is for Xbox driver and joy manipulator
+    /*
     m_drivetrain.setDefaultCommand(new DriveArcade(m_drivetrain,
     () -> xboxController.getY(GenericHID.Hand.kLeft),
     () -> xboxController.getX(GenericHID.Hand.kLeft)));
+    */
 
     D4.whileHeld(new IntakeUp(intakeObject));
     D6.whileHeld(new IntakeDown(intakeObject));

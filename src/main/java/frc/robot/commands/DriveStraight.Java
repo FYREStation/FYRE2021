@@ -16,9 +16,9 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.Constants;
 
 public class DriveStraight extends CommandBase {
-
-	private Drivetrain drive_train;
-	private DriverStation driver_station;
+	@SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+	private final Drivetrain drive_train;
+	//private final DriverStation driver_station;
     /*
     private PIDController autoPID;
 	private double P = 0.1;
@@ -39,9 +39,7 @@ public class DriveStraight extends CommandBase {
 	// Called just before this Command runs the first time
 	@Override
 	public void initialize() {
-        
-
-		
+        driveSlalom();
 	} 
 
 	// Called repeatedly when this Command is scheduled to run
@@ -59,6 +57,7 @@ public class DriveStraight extends CommandBase {
 	// Called once after isFinished returns true
 	@Override
 	public void end(boolean interrupted) {
+		
 	}
 
 	// Called when another command which requires one or more of the same
@@ -67,42 +66,58 @@ public class DriveStraight extends CommandBase {
     public void driveStraightDistance(double distance, boolean isForward){
         double currentPlace = drive_train.getRightDriveEncoderDistance();
         double destination;
-		double speed = 0.6;
-		
-		if(isForward){
-			destination =  currentPlace + distance;
-			while(currentPlace < destination){
-				currentPlace = drive_train.getRightDriveEncoderDistance();
-				drive_train.tankDrive(speed, speed);
-			}
+		double speed = 30; //Speed is inches/second
+		double speedPWM = ((speed * 0.465) + 44.1)/100;
+
+		if(speedPWM > 0.8){
+			System.out.println("SPEED TOO HIGH!");
+		}else if(speedPWM < 0.5){
+			System.out.println("SPEED TOO LOW!");
 		}else{
-			destination = currentPlace - distance;
-			while(currentPlace > destination){
-				currentPlace = drive_train.getRightDriveEncoderDistance();
-				drive_train.tankDrive(-speed, -speed);
-			
+			if(isForward){
+				destination =  currentPlace + distance;
+				while(currentPlace < destination){
+					System.out.println("Current Place is:" + currentPlace);
+					currentPlace = drive_train.getRightDriveEncoderDistance();
+					drive_train.tankDriving(speedPWM, speedPWM);
+				}
+			}else{
+				destination = currentPlace - distance;
+				while(currentPlace > destination){
+					System.out.println("Current Place is:" + currentPlace);
+					currentPlace = drive_train.getRightDriveEncoderDistance();
+					drive_train.tankDriving(-speedPWM, -speedPWM);
+				
+				}
 			}
 		}
 	}
 	
-	public void driveStraightDistance(double distance, boolean isForward, double theSpeed){
+	public void driveStraightDistance(double distance, boolean isForward, double realSpeed){
         double currentPlace = drive_train.getRightDriveEncoderDistance();
-        double destination = currentPlace + distance;
-        //double speed = //input theSpeed into equation to get PWM duty cycle;
-		double speed = theSpeed; //Comment this line when done testing. Input duty cycle on testing day.
-
-		if(isForward){
-			destination =  currentPlace + distance;
-			while(currentPlace < destination){
-				currentPlace = drive_train.getRightDriveEncoderDistance();
-				drive_train.tankDrive(speed, speed);
-			}
+        double destination;
+		double speedPWM = ((realSpeed * 0.465) + 44.1)/100;
+		
+		if(speedPWM > 0.8){
+			System.out.println("SPEED TOO HIGH!");
+		}else if(speedPWM < 0.5){
+			System.out.println("SPEED TOO LOW!");
 		}else{
-			destination = currentPlace - distance;
-			while(currentPlace > destination){
-				currentPlace = drive_train.getRightDriveEncoderDistance();
-				drive_train.tankDrive(-speed, -speed);
-			
+			if(isForward){
+				destination = currentPlace + distance;
+				while(currentPlace < destination){
+					System.out.println("Current Place is:" + currentPlace);
+					currentPlace = drive_train.getRightDriveEncoderDistance();
+					drive_train.tankDriving(speedPWM, speedPWM);
+				}
+			}else{
+				destination = currentPlace - distance;
+				while(currentPlace > destination){
+					System.out.println("Current Place is:" + currentPlace);
+					currentPlace = drive_train.getRightDriveEncoderDistance();
+					drive_train.tankDriving(-speedPWM, -speedPWM);
+				
+				}
 			}
 		}
 	}
@@ -114,8 +129,10 @@ public class DriveStraight extends CommandBase {
 		double distanceRightArc;
 		double distanceLeftArc;
 		double distanceMiddleArc;
-		double realLeftSpeed;
-		double realRightSpeed = 0.4;
+		double speed = 30;
+		double time;
+		double leftSpeedPWM;
+		double rightSpeedPWM;
 	
 
 		//This is keeping track of the right wheel's distance traveled
@@ -124,27 +141,38 @@ public class DriveStraight extends CommandBase {
 		if ((isForward && degree > 0) || !(isForward || degree > 0)){
 			distanceRightArc = 2 * Constants.PI * (radius + 15.5) * Math.abs(degree) / 360;
 			distanceMiddleArc = 2 * Constants.PI * radius * Math.abs(degree) / 360;
-			distanceLeftArc = 2 * Constants.PI * (radius - 15.5) * Math.abs(degree) / 360;;
+			distanceLeftArc = 2 * Constants.PI * (radius - 15.5) * Math.abs(degree) / 360;
 		}else{
 			distanceRightArc = 2 * Constants.PI * (radius -15.5) * Math.abs(degree) / 360;
 			distanceMiddleArc = 2 * Constants.PI * radius * Math.abs(degree) / 360;
 			distanceLeftArc = 2 * Constants.PI * (radius + 15.5) * Math.abs(degree) / 360;
 		}
-
-		realLeftSpeed = realRightSpeed * (distanceLeftArc/distanceRightArc);
-
-		if (isForward){
-			destination = currentPlace + distanceRightArc;
-			while(currentPlace < destination){
-				currentPlace = drive_train.getRightDriveEncoderDistance();
-				drive_train.tankDrive(realLeftSpeed, realRightSpeed);	
-			}
+		
+		time = distanceMiddleArc/speed;
+		//Note to self and Ryan and others. This needs to be added.
+		leftSpeedPWM = (((distanceLeftArc/time)* 0.465) + 44.1)/100; //realLeftSpeed input into PWM equation
+		rightSpeedPWM = (((distanceRightArc/time)* 0.465) + 44.1)/100; //realRightSpeed input into PWM equation
+		
+		if(rightSpeedPWM > 0.8 || leftSpeedPWM > 0.8){
+			System.out.println("SPEED TOO HIGH!");
+		}else if(rightSpeedPWM < 0.5 || leftSpeedPWM < 0.5){
+			System.out.println("SPEED TOO LOW!");
 		}else{
-			destination = currentPlace - distanceRightArc;
-			while(currentPlace > destination){
-				drive_train.tankDrive(-realLeftSpeed, -realRightSpeed);
-				
-			}	
+			if (isForward){
+				destination = currentPlace + distanceRightArc;
+				while(currentPlace < destination){
+					System.out.println("Current Place is:" + currentPlace);
+					currentPlace = drive_train.getRightDriveEncoderDistance();
+					drive_train.tankDriving(leftSpeedPWM, rightSpeedPWM);	
+				}
+			}else{
+				destination = currentPlace - distanceRightArc;
+				while(currentPlace > destination){
+					System.out.println("Current Place is:" + currentPlace);
+					currentPlace = drive_train.getRightDriveEncoderDistance();
+					drive_train.tankDriving(-leftSpeedPWM, -rightSpeedPWM);
+				}	
+			}
 		}
 	}
 
@@ -163,7 +191,7 @@ public class DriveStraight extends CommandBase {
 		double distanceRightArc;
 		double distanceLeftArc;
 		double distanceMiddleArc;
-		double averageRobotSpeed; 
+		//double averageRobotSpeed; 
 		double realLeftSpeed;
 		double realRightSpeed;
 		double leftSpeedPWM;
@@ -174,10 +202,11 @@ public class DriveStraight extends CommandBase {
 		//This is keeping track of the right wheel's distance traveled
 		//This is checking if it forward and counterclockwise or backward and clockwise
 		//(Inside or outside)
+		
 		if ((isForward && degree > 0) || !(isForward || degree > 0)){
 			distanceRightArc = 2 * Constants.PI * (radius + 15.5) * Math.abs(degree) / 360;
 			distanceMiddleArc = 2 * Constants.PI * radius * Math.abs(degree) / 360;
-			distanceLeftArc = 2 * Constants.PI * (radius - 15.5) * Math.abs(degree) / 360;;
+			distanceLeftArc = 2 * Constants.PI * (radius - 15.5) * Math.abs(degree) / 360;
 		}else{
 			distanceRightArc = 2 * Constants.PI * (radius -15.5) * Math.abs(degree) / 360;
 			distanceMiddleArc = 2 * Constants.PI * radius * Math.abs(degree) / 360;
@@ -187,25 +216,79 @@ public class DriveStraight extends CommandBase {
 		time = distanceMiddleArc/speed;
 		realLeftSpeed = distanceLeftArc/time;
 		realRightSpeed = distanceRightArc/time;
-		//Note to self and Ryan and others. This needs to be added.
-		leftSpeedPWM = 0; //realLeftSpeed input into PWM equation
-		rightSpeedPWM = 0; //realRightSpeed input into PWM equation
+		leftSpeedPWM = ((realLeftSpeed* 0.465) + 44.1)/100; //realLeftSpeed input into PWM equation
+		rightSpeedPWM = ((realRightSpeed* 0.465) + 44.1)/100; //realRightSpeed input into PWM equation
 
-		if (isForward){
-			destination = currentPlace + distanceRightArc;
-			while(currentPlace < destination){
-				currentPlace = drive_train.getRightDriveEncoderDistance();
-				drive_train.tankDrive(leftSpeedPWM, rightSpeedPWM);	
-			}
+		if(rightSpeedPWM > 0.8 || leftSpeedPWM > 0.8){
+			System.out.println("SPEED TOO HIGH!");
+		}else if(rightSpeedPWM < 0.5 || leftSpeedPWM < 0.5){
+			System.out.println("SPEED TOO LOW!");
 		}else{
-			destination = currentPlace - distanceRightArc;
-			while(currentPlace > destination){
-				drive_train.tankDrive(-leftSpeedPWM, -rightSpeedPWM);
-				
-			}	
+			if (isForward){
+				destination = currentPlace + distanceRightArc;
+				while(currentPlace < destination){
+					System.out.println("Current Place is:" + currentPlace);
+					currentPlace = drive_train.getRightDriveEncoderDistance();
+					drive_train.tankDriving(leftSpeedPWM, rightSpeedPWM);	
+				}
+			}else{
+				destination = currentPlace - distanceRightArc;
+				while(currentPlace > destination){
+					System.out.println("Current Place is:" + currentPlace);
+					currentPlace = drive_train.getRightDriveEncoderDistance();
+					drive_train.tankDriving(-leftSpeedPWM, -rightSpeedPWM);
+					
+				}	
+			}
 		}
-
-
-
 	}
+	
+	public void manualTesting(double speed){
+		if(speed < 0.8){
+			drive_train.tankDriving(speed + 0.03, speed);
+		}else{
+			System.out.println("SPEED IS TOO HIGH");
+		}
+	}
+
+	//These are all the paths
+	//We may need to fix Barrel
+	public void driveBarrel(){
+		this.driveStraightDistance(90, true, 27.724);
+		this.driveArc(30, -354.4413274, true, 27.724);
+		this.driveStraightDistance(95.39, true, 27.724);
+		this.driveArc(21, 309.4413274, true, 27.724);
+		this.driveStraightDistance(84.85, true, 27.724);
+		this.driveArc(21, 225, true, 27.724);
+		this.driveStraightDistance(240, true, 27.724);
+	}
+	  
+	public void driveSlalom(){
+		this.driveArc(30, 90, true, 35.0);
+		this.driveArc(30, -90, true, 35.0);
+		this.driveStraightDistance(120, true, 23.708);
+		this.driveArc(30, -90, true, 35.0);
+		this.driveArc(30, 360, true, 35.0);
+		this.driveArc(30, -90, true, 35.0);
+		this.driveStraightDistance(120, true, 23.708);
+		this.driveArc(30, -90, true, 35.0);
+		this.driveArc(30, 90, true, 35.0);
+	}
+	
+	  public void driveBounce(){
+		this.driveArc(30, 90, true, 35);
+		this.driveStraightDistance(30, true, 24.661);
+		this.driveStraightDistance(30, false, 24.661);
+		this.driveArc(30, 26.57, false, 35);
+		this.driveStraightDistance(67.08, false, 24.661);
+		this.driveArc(30, 153.43, false, 35);
+		this.driveStraightDistance(90, false, 24.661);    
+		this.driveStraightDistance(90, true, 24.661);
+		this.driveArc(30, 90, true, 35);    
+		this.driveStraightDistance(30, true, 24.661);
+		this.driveArc(30, 90, true, 35);
+		this.driveStraightDistance(90, true, 24.661);
+		this.driveStraightDistance(30, false, 24.661);
+		this.driveArc(30, 90, false, 35);
+	  }
 }
