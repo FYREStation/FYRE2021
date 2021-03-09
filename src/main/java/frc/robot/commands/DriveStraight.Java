@@ -304,7 +304,7 @@ public class DriveStraight extends CommandBase {
 		this.driveArc(30, -90, true, 35.0);
 		this.driveStraightDistance(100, true, 26);
 		this.driveArc(30, -90, true, 35.0);
-		this.driveArc(23, 360, true, 35.0);
+		this.driveArc(30, 360, true, 35.0);
 		this.driveArc(30, -90, true, 35.0);
 		this.driveStraightDistance(120, true, 26);
 		this.driveArc(30, -90, true, 35.0);

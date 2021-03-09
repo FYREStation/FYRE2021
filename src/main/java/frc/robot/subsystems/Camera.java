@@ -14,6 +14,7 @@ import edu.wpi.cscore.VideoMode.PixelFormat;
 
 public class Camera extends SubsystemBase{
     public static Servo cameraServo;
+    UsbCamera usbCamera;
 
     public Camera(){
         //cameraServo = new Servo(Constants.CAMERA_SERVO);
@@ -33,7 +34,7 @@ public class Camera extends SubsystemBase{
 
     public void prepareVisionProcessing(){     
         // Creates UsbCamera and MjpegServer [1] and connects them
-        UsbCamera usbCamera = new UsbCamera("USB Camera 0", 0);
+        usbCamera = new UsbCamera("USB Camera 0", 0);
         MjpegServer mjpegServer1 = new MjpegServer("serve_USB Camera 0", 1181);
         mjpegServer1.setSource(usbCamera);
 
@@ -53,6 +54,10 @@ public class Camera extends SubsystemBase{
 
     public static void displayToSmartDashBoard(){
         
+    }
+    
+    public UsbCamera getCamera(){
+        return usbCamera;
     }
 
     public static void servoTest(){

@@ -18,6 +18,7 @@ import frc.robot.commands.DriveArcade;
 import frc.robot.commands.DriveForwardAutoNoPID;
 import frc.robot.commands.DriveForwardAutoPID;
 import frc.robot.commands.DriveStraight;
+import frc.robot.commands.GalacticSearch;
 import frc.robot.commands.GetGameColor;
 import frc.robot.commands.IntakeDown;
 import frc.robot.commands.IntakeUp;
@@ -34,6 +35,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Lift;
 import frc.robot.RobotContainer;
 
+
 /*
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -46,7 +48,8 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   private DriverStation m_driverStation;
   
-  private Command driveSlalom;
+  private Command driveSlalom;  
+  private Command galcSearch;
   /*
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -60,6 +63,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
 
     Camera thisObject = new Camera();
+    
+    galcSearch = new GalacticSearch(RobotContainer.m_drivetrain, thisObject);
     driveSlalom = new DriveStraight(RobotContainer.m_drivetrain); 
     
   }

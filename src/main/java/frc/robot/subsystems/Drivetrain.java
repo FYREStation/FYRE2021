@@ -10,11 +10,15 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+
 /**
  * Add your docs here.
  */
@@ -44,15 +48,19 @@ public class Drivetrain extends SubsystemBase {
     private final Encoder LeftDriveEncoder = new Encoder(Constants.DRIVETRAIN_DRIVE_ENCODER_LEFT_A, Constants.DRIVETRAIN_DRIVE_ENCODER_LEFT_B,true,Encoder.EncodingType.k4X);
     private final Encoder RightDriveEncoder = new Encoder(Constants.DRIVETRAIN_DRIVE_ENCODER_RIGHT_A, Constants.DRIVETRAIN_DRIVE_ENCODER_RIGHT_B,true,Encoder.EncodingType.k4X);
     
-	public Drivetrain() {
+    //Gyro 
+    private Gyro drive_gyro = new ADXRS450_Gyro(Port.kMXP);
+    
+    public Drivetrain() {
         //LeftSparksAll.setSafetyEnabled(false);
         //RightSparksAll.setSafetyEnabled(false);
         //differentialDrive.setSafetyEnabled(false);
+        drive_gyro.calibrate();
         LeftSparksAll.setExpiration(99999);
         RightSparksAll.setExpiration(99999);
         LeftSparksAll.setSafetyEnabled(false);
         RightSparksAll.setSafetyEnabled(false);
-        differentialDrive.setExpiration(99999);
+        differentialDrive.setExpiration(30);
         LeftDriveEncoder.reset();
         RightDriveEncoder.reset();
         LeftDriveEncoder.setDistancePerPulse(Constants.driveCircum/(2048.0));
@@ -110,6 +118,8 @@ public class Drivetrain extends SubsystemBase {
     public void smartBoardTest(){
         SmartDashboard.putNumber("LeftEncoder: ", getLeftDriveEncoderDistance());
         SmartDashboard.putNumber("RightEncoder: ", getRightDriveEncoderDistance());
+        SmartDashboard.putNumber("Gyro: ", drive_gyro.getAngle());
+        SmartDashboard.putNumber("Gyro Rate: ", drive_gyro.getRate());
         SmartDashboard.updateValues();
     }
 
