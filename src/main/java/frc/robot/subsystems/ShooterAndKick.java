@@ -32,15 +32,12 @@ public class ShooterAndKick extends SubsystemBase {
   }
  
   public void smartBoardTest(){
-    angle = Math.random();
-    SmartDashboard.putNumber("Current Angle: ", angle);
-    SmartDashboard.updateValues();
 
   }
 
   @Override
   public void periodic() {
-    smartBoardTest();
+    //smartBoardTest();
 
   }
 }

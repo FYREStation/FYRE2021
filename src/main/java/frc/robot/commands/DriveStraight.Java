@@ -39,7 +39,8 @@ public class DriveStraight extends CommandBase {
 	// Called just before this Command runs the first time
 	@Override
 	public void initialize() {
-        driveSlalom();
+        //driveStraightDistance(30,true);
+		driveSlalom();
 	} 
 
 	// Called repeatedly when this Command is scheduled to run
@@ -51,6 +52,7 @@ public class DriveStraight extends CommandBase {
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	public boolean isFinished() {
+		drive_train.tankDriving(0,0);
 		return true;
 	}
 
@@ -79,14 +81,14 @@ public class DriveStraight extends CommandBase {
 				while(currentPlace < destination){
 					System.out.println("Current Place is:" + currentPlace);
 					currentPlace = drive_train.getRightDriveEncoderDistance();
-					drive_train.tankDriving(speedPWM, speedPWM);
+					drive_train.tankDriving((speedPWM+0.03), speedPWM);
 				}
 			}else{
 				destination = currentPlace - distance;
 				while(currentPlace > destination){
 					System.out.println("Current Place is:" + currentPlace);
 					currentPlace = drive_train.getRightDriveEncoderDistance();
-					drive_train.tankDriving(-speedPWM, -speedPWM);
+					drive_train.tankDriving(-(speedPWM+0.03), -speedPWM);
 				
 				}
 			}
@@ -94,37 +96,41 @@ public class DriveStraight extends CommandBase {
 	}
 	
 	public void driveStraightDistance(double distance, boolean isForward, double realSpeed){
-        double currentPlace = drive_train.getRightDriveEncoderDistance();
+		drive_train.resetLeftDriveEncoderCount();
+		double currentPlace = drive_train.getLeftDriveEncoderDistance();
         double destination;
 		double speedPWM = ((realSpeed * 0.465) + 44.1)/100;
 		
-		if(speedPWM > 0.8){
+		/*if(speedPWM > 0.8){
 			System.out.println("SPEED TOO HIGH!");
 		}else if(speedPWM < 0.5){
 			System.out.println("SPEED TOO LOW!");
-		}else{
+		}else{*/
 			if(isForward){
 				destination = currentPlace + distance;
+				drive_train.tankDriving((speedPWM+0.03), speedPWM);
+
 				while(currentPlace < destination){
 					System.out.println("Current Place is:" + currentPlace);
-					currentPlace = drive_train.getRightDriveEncoderDistance();
-					drive_train.tankDriving(speedPWM, speedPWM);
+					currentPlace = drive_train.getLeftDriveEncoderDistance();
 				}
+
 			}else{
 				destination = currentPlace - distance;
+				drive_train.tankDriving(-(speedPWM-0.03), -speedPWM);
+
 				while(currentPlace > destination){
 					System.out.println("Current Place is:" + currentPlace);
-					currentPlace = drive_train.getRightDriveEncoderDistance();
-					drive_train.tankDriving(-speedPWM, -speedPWM);
-				
+					currentPlace = drive_train.getLeftDriveEncoderDistance();
 				}
 			}
-		}
+		//}
+		drive_train.resetLeftDriveEncoderCount();
 	}
 
 	//This is the nonoverloaded version. Should not be used after testing day.
 	public void driveArc(double radius, double degree, boolean isForward){
-        double currentPlace = drive_train.getRightDriveEncoderDistance();
+		double currentPlace = drive_train.getRightDriveEncoderDistance();
         double destination;
 		double distanceRightArc;
 		double distanceLeftArc;
@@ -163,14 +169,14 @@ public class DriveStraight extends CommandBase {
 				while(currentPlace < destination){
 					System.out.println("Current Place is:" + currentPlace);
 					currentPlace = drive_train.getRightDriveEncoderDistance();
-					drive_train.tankDriving(leftSpeedPWM, rightSpeedPWM);	
+					drive_train.tankDriving((leftSpeedPWM+0.03), rightSpeedPWM);	
 				}
 			}else{
 				destination = currentPlace - distanceRightArc;
 				while(currentPlace > destination){
 					System.out.println("Current Place is:" + currentPlace);
 					currentPlace = drive_train.getRightDriveEncoderDistance();
-					drive_train.tankDriving(-leftSpeedPWM, -rightSpeedPWM);
+					drive_train.tankDriving(-(leftSpeedPWM+0.03), -rightSpeedPWM);
 				}	
 			}
 		}
@@ -186,8 +192,10 @@ public class DriveStraight extends CommandBase {
 	 */
 
 	public void driveArc(double radius, double degree, boolean isForward, double realSpeed){
-        double currentPlace = drive_train.getRightDriveEncoderDistance();
-        double destination;
+		drive_train.resetLeftDriveEncoderCount();
+		drive_train.resetRightDriveEncoderCount();
+		double currentPlace; 
+		double destination;
 		double distanceRightArc;
 		double distanceLeftArc;
 		double distanceMiddleArc;
@@ -219,28 +227,55 @@ public class DriveStraight extends CommandBase {
 		leftSpeedPWM = ((realLeftSpeed* 0.465) + 44.1)/100; //realLeftSpeed input into PWM equation
 		rightSpeedPWM = ((realRightSpeed* 0.465) + 44.1)/100; //realRightSpeed input into PWM equation
 
-		if(rightSpeedPWM > 0.8 || leftSpeedPWM > 0.8){
+		/*if(rightSpeedPWM > 0.8 || leftSpeedPWM > 0.8){
 			System.out.println("SPEED TOO HIGH!");
 		}else if(rightSpeedPWM < 0.5 || leftSpeedPWM < 0.5){
 			System.out.println("SPEED TOO LOW!");
-		}else{
+		}else{*/
 			if (isForward){
-				destination = currentPlace + distanceRightArc;
-				while(currentPlace < destination){
-					System.out.println("Current Place is:" + currentPlace);
+				drive_train.resetLeftDriveEncoderCount();
+				drive_train.resetRightDriveEncoderCount();
+
+				drive_train.tankDriving((leftSpeedPWM+0.03), rightSpeedPWM);
+				if(distanceLeftArc > distanceRightArc){
+					currentPlace = drive_train.getLeftDriveEncoderDistance();
+					destination = currentPlace + distanceLeftArc;
+					while(currentPlace < destination){
+						System.out.println("Current Place is:" + currentPlace);		
+						currentPlace = drive_train.getLeftDriveEncoderDistance();
+					}
+				}else{
 					currentPlace = drive_train.getRightDriveEncoderDistance();
-					drive_train.tankDriving(leftSpeedPWM, rightSpeedPWM);	
+					destination = currentPlace + distanceRightArc;
+					while(currentPlace < destination){
+						System.out.println("Current Place is:" + currentPlace);
+						currentPlace = drive_train.getRightDriveEncoderDistance();		
+					}
 				}
 			}else{
-				destination = currentPlace - distanceRightArc;
-				while(currentPlace > destination){
-					System.out.println("Current Place is:" + currentPlace);
+				drive_train.resetLeftDriveEncoderCount();
+				drive_train.resetRightDriveEncoderCount();
+				
+				drive_train.tankDriving(-(leftSpeedPWM-0.03), -rightSpeedPWM);
+				if(distanceLeftArc > distanceRightArc){
+					currentPlace = drive_train.getLeftDriveEncoderDistance();
+					destination = currentPlace - distanceLeftArc;
+					while(currentPlace > destination){
+						System.out.println("Current Place is:" + currentPlace);		
+						currentPlace = drive_train.getLeftDriveEncoderDistance();
+					}
+				}else{
 					currentPlace = drive_train.getRightDriveEncoderDistance();
-					drive_train.tankDriving(-leftSpeedPWM, -rightSpeedPWM);
-					
-				}	
+					destination = currentPlace - distanceRightArc;
+					while(currentPlace > destination){
+						System.out.println("Current Place is:" + currentPlace);
+						currentPlace = drive_train.getRightDriveEncoderDistance();		
+					}
+				}
 			}
-		}
+		//}
+		drive_train.resetLeftDriveEncoderCount();
+		drive_train.resetRightDriveEncoderCount();
 	}
 	
 	public void manualTesting(double speed){
@@ -261,18 +296,20 @@ public class DriveStraight extends CommandBase {
 		this.driveStraightDistance(84.85, true, 27.724);
 		this.driveArc(21, 225, true, 27.724);
 		this.driveStraightDistance(240, true, 27.724);
+		isFinished();
 	}
 	  
 	public void driveSlalom(){
 		this.driveArc(30, 90, true, 35.0);
 		this.driveArc(30, -90, true, 35.0);
-		this.driveStraightDistance(120, true, 23.708);
+		this.driveStraightDistance(100, true, 26);
 		this.driveArc(30, -90, true, 35.0);
-		this.driveArc(30, 360, true, 35.0);
+		this.driveArc(23, 360, true, 35.0);
 		this.driveArc(30, -90, true, 35.0);
-		this.driveStraightDistance(120, true, 23.708);
+		this.driveStraightDistance(120, true, 26);
 		this.driveArc(30, -90, true, 35.0);
 		this.driveArc(30, 90, true, 35.0);
+		isFinished();
 	}
 	
 	  public void driveBounce(){
@@ -290,5 +327,14 @@ public class DriveStraight extends CommandBase {
 		this.driveStraightDistance(90, true, 24.661);
 		this.driveStraightDistance(30, false, 24.661);
 		this.driveArc(30, 90, false, 35);
-	  }
+		isFinished();
+	}
+
+	  public void driveOsillating(){
+		this.driveArc(30, 90, true, 35.0);
+		this.driveArc(30, -180, true, 35.0);
+		this.driveArc(30, 180, true, 35.0);
+		this.driveArc(30, -180, true, 35.0);
+		this.driveArc(30, 180, true, 35.0);
+	}
 }

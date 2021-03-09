@@ -48,12 +48,15 @@ public class Drivetrain extends SubsystemBase {
         //LeftSparksAll.setSafetyEnabled(false);
         //RightSparksAll.setSafetyEnabled(false);
         //differentialDrive.setSafetyEnabled(false);
-        LeftSparksAll.setExpiration(0.8);
-        RightSparksAll.setExpiration(0.8);
+        LeftSparksAll.setExpiration(99999);
+        RightSparksAll.setExpiration(99999);
+        LeftSparksAll.setSafetyEnabled(false);
+        RightSparksAll.setSafetyEnabled(false);
+        differentialDrive.setExpiration(99999);
         LeftDriveEncoder.reset();
         RightDriveEncoder.reset();
         LeftDriveEncoder.setDistancePerPulse(Constants.driveCircum/(2048.0));
-        LeftDriveEncoder.setReverseDirection(true);
+        LeftDriveEncoder.setReverseDirection(false);
         RightDriveEncoder.setDistancePerPulse(Constants.driveCircum/(2048.0));
     }
 
