@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
 
     Camera thisObject = new Camera();
     
-    galcSearch = new GalacticSearch(RobotContainer.m_drivetrain, thisObject);
+    galcSearch = new GalacticSearch(RobotContainer.m_drivetrain, RobotContainer.intakeObject, thisObject);
     driveSlalom = new DriveStraight(RobotContainer.m_drivetrain); 
     
   }

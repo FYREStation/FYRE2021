@@ -30,10 +30,27 @@ public class Intake extends SubsystemBase {
     
     BackSparkMaxIntake = new CANSparkMax(Constants.INTAKE_BACK_SPARK_Max, CANSparkMaxLowLevel.MotorType.kBrushed);
     FrontSparkMaxIntake = new CANSparkMax(Constants.INTAKE_FRONT_SPARK_Max,CANSparkMaxLowLevel.MotorType.kBrushed);  
-    
+    BackSparkMaxIntake.setCANTimeout(999999);
+    FrontSparkMaxIntake.setCANTimeout(999999);
+
    // Encoder FrontIntakeEncoder = new Encoder(Constants.INTAKE_ENCODER_FRONT_A, Constants.INTAKE_ENCODER_FRONT_B);
    // Encoder BackIntakeEncoder = new Encoder(Constants.INTAKE_ENCODER_BACK_A, Constants.INTAKE_ENCODER_BACK_B);
 
+  }
+
+  public void runIntakeDown(){
+    BackSparkMaxIntake.set(-1.0);
+    FrontSparkMaxIntake.set(1.0);
+  }
+
+  public void runIntakeUp(){
+    BackSparkMaxIntake.set(1.0);
+    FrontSparkMaxIntake.set(-1.0);
+  }
+
+  public void stopIntake(){
+    BackSparkMaxIntake.set(0.0);
+    FrontSparkMaxIntake.set(0.0);
   }
 
   @Override
