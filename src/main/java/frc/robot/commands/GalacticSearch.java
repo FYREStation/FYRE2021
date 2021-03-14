@@ -80,13 +80,15 @@ public class GalacticSearch extends CommandBase {
 			//synchronized (imgLock) {
 			//	centerX = r.x + (r.width / 2);
 			//	centerY = r.y + (r.length/2);
-			System.out.println(pipeline.findBlobsOutput());
+			System.out.println("Pipeline is printing: " + pipeline.findBlobsOutput().toArray()[0].pt.x);
+			System.out.println("Pipeline is printing: " + pipeline.findBlobsOutput().toArray()[0].pt.y);
 			//}
 		}
 		
 		numObjectsDetected = pipeline.findBlobsOutput().toArray().length;
 		});
 		visionThread.start();
+		
 	}
 
 	public void updateImage(){

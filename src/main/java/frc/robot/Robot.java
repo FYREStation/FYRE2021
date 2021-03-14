@@ -63,9 +63,10 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
 
     Camera thisObject = new Camera();
-    
+    //Camera.testingCamera();
+    thisObject.prepareVisionProcessing();
     galcSearch = new GalacticSearch(RobotContainer.m_drivetrain, RobotContainer.intakeObject, thisObject);
-    driveSlalom = new DriveStraight(RobotContainer.m_drivetrain); 
+    //driveSlalom = new DriveStraight(RobotContainer.m_drivetrain); 
     
   }
 
@@ -88,7 +89,6 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("Drivetrain Encoder Left: ", RobotContainer.m_drivetrain.getLeftDriveEncoderCount());
     //SmartDashboard.putNumber("Drivetrain Encoder Right: ", RobotContainer.m_drivetrain.getRightDriveEncoderCount());
     //SmartDashboard.putNumber("Lift Encoder: ", RobotContainer.liftObject.liftEncoder.get());
-
   }
 
   /**
@@ -114,9 +114,13 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    //What does the above do? Check for next time.
+    
     if(driveSlalom != null){
       driveSlalom.schedule();
+    }
+
+    if(galcSearch != null){
+      galcSearch.schedule();
     }
     
     
@@ -149,6 +153,9 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
+    }
+    if(driveSlalom != null){
+      driveSlalom.cancel();
     }
     
   }

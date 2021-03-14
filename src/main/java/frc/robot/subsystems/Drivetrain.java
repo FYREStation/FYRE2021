@@ -49,7 +49,7 @@ public class Drivetrain extends SubsystemBase {
     private final Encoder RightDriveEncoder = new Encoder(Constants.DRIVETRAIN_DRIVE_ENCODER_RIGHT_A, Constants.DRIVETRAIN_DRIVE_ENCODER_RIGHT_B,true,Encoder.EncodingType.k4X);
     
     //Gyro 
-    private Gyro drive_gyro = new ADXRS450_Gyro(Port.kMXP);
+    private Gyro drive_gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
     
     public Drivetrain() {
         //LeftSparksAll.setSafetyEnabled(false);

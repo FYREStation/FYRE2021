@@ -96,7 +96,7 @@ public class DriveStraight extends CommandBase {
 	}
 	
 	public void driveStraightDistance(double distance, boolean isForward, double realSpeed){
-		drive_train.resetLeftDriveEncoderCount();
+		//drive_train.resetLeftDriveEncoderCount();
 		double currentPlace = drive_train.getLeftDriveEncoderDistance();
         double destination;
 		double speedPWM = ((realSpeed * 0.465) + 44.1)/100;
@@ -108,7 +108,7 @@ public class DriveStraight extends CommandBase {
 		}else{*/
 			if(isForward){
 				destination = currentPlace + distance;
-				drive_train.tankDriving((speedPWM+0.03), speedPWM);
+				drive_train.tankDriving((speedPWM), speedPWM);
 
 				while(currentPlace < destination){
 					System.out.println("Current Place is:" + currentPlace);
@@ -233,8 +233,8 @@ public class DriveStraight extends CommandBase {
 			System.out.println("SPEED TOO LOW!");
 		}else{*/
 			if (isForward){
-				drive_train.resetLeftDriveEncoderCount();
-				drive_train.resetRightDriveEncoderCount();
+				//drive_train.resetLeftDriveEncoderCount();
+				//drive_train.resetRightDriveEncoderCount();
 
 				drive_train.tankDriving((leftSpeedPWM+0.03), rightSpeedPWM);
 				if(distanceLeftArc > distanceRightArc){
@@ -253,8 +253,8 @@ public class DriveStraight extends CommandBase {
 					}
 				}
 			}else{
-				drive_train.resetLeftDriveEncoderCount();
-				drive_train.resetRightDriveEncoderCount();
+				//drive_train.resetLeftDriveEncoderCount();
+				//drive_train.resetRightDriveEncoderCount();
 				
 				drive_train.tankDriving(-(leftSpeedPWM-0.03), -rightSpeedPWM);
 				if(distanceLeftArc > distanceRightArc){
@@ -300,9 +300,12 @@ public class DriveStraight extends CommandBase {
 	}
 	  
 	public void driveSlalom(){
-		this.driveArc(30, 90, true, 35.0);
-		this.driveArc(30, -90, true, 35.0);
+		this.driveArc(30, 95, true, 35.0);
+		this.driveArc(30, -70, true, 35.0);
+
+		pausing(500);
 		this.driveStraightDistance(100, true, 26);
+		
 		this.driveArc(30, -90, true, 35.0);
 		this.driveArc(30, 360, true, 35.0);
 		this.driveArc(30, -90, true, 35.0);
@@ -310,6 +313,7 @@ public class DriveStraight extends CommandBase {
 		this.driveArc(30, -90, true, 35.0);
 		this.driveArc(30, 90, true, 35.0);
 		isFinished();
+		
 	}
 	
 	  public void driveBounce(){
@@ -336,5 +340,14 @@ public class DriveStraight extends CommandBase {
 		this.driveArc(30, 180, true, 35.0);
 		this.driveArc(30, -180, true, 35.0);
 		this.driveArc(30, 180, true, 35.0);
+	}
+
+	public void pausing(double timeToWait){
+		double startTime = System.currentTimeMillis();
+		double finalTime = startTime + timeToWait;
+		drive_train.tankDriving(0, 0);
+		while(startTime < finalTime){
+			startTime = System.currentTimeMillis();
+		}
 	}
 }
