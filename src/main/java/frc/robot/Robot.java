@@ -43,13 +43,13 @@ import frc.robot.RobotContainer;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
-
+  
   private RobotContainer m_robotContainer;
   private DriverStation m_driverStation;
   
-  private Command driveSlalom;  
-  private Command galcSearch;
+  private Command driveSlalom;
+  private Command m_galcSearch;
+
   /*
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -62,10 +62,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
 
-    Camera thisObject = new Camera();
-    //Camera.testingCamera();
-    thisObject.prepareVisionProcessing();
-    galcSearch = new GalacticSearch(RobotContainer.m_drivetrain, RobotContainer.intakeObject, thisObject);
+    
+    //galcSearch = new GalacticSearch(RobotContainer.m_drivetrain, RobotContainer.intakeObject, RobotContainer.cameraObject);
     //driveSlalom = new DriveStraight(RobotContainer.m_drivetrain); 
     
   }
@@ -108,21 +106,18 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-   	m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+   	m_galcSearch = m_robotContainer.getAutonomousCommand();
+    
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+    if (m_galcSearch != null) {
+      m_galcSearch.schedule();
     }
     
+    /*
     if(driveSlalom != null){
       driveSlalom.schedule();
     }
-
-    if(galcSearch != null){
-      galcSearch.schedule();
-    }
-    
+    */
     
     
   }
@@ -142,7 +137,8 @@ public class Robot extends TimedRobot {
     //driveObject.driveStraightDistance(1000, true, 0.80);
     //driveSlalom(driveObject);
     //driveObject.driveStraightDistance(90, true, 0.60);
-
+   
+    
   }
 
   @Override
@@ -151,12 +147,15 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+    if (m_galcSearch != null) {
+      m_galcSearch.cancel();
     }
+    
+    /*
     if(driveSlalom != null){
       driveSlalom.cancel();
     }
+    */
     
   }
 

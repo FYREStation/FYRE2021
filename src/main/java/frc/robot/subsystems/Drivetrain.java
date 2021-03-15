@@ -74,8 +74,8 @@ public class Drivetrain extends SubsystemBase {
        
         Constants.leftWheelDistance = (this.LeftDriveEncoder.getDistance());
         Constants.rightWheelDistance = (this.RightDriveEncoder.getDistance());
-        System.out.println("DisInInches Left:" + this.LeftDriveEncoder.getDistance());
-        System.out.println("DisInInches Right:" + this.RightDriveEncoder.getDistance());
+        //System.out.println("DisInInches Left:" + this.LeftDriveEncoder.getDistance());
+        //System.out.println("DisInInches Right:" + this.RightDriveEncoder.getDistance());
         //System.out.println("LEFT DRIVE:" + Constants.leftWheelDistance); 
         //System.out.println("RIGHT DRIVE:" + Constants.rightWheelDistance); 
         
