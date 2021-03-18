@@ -36,6 +36,7 @@ import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.ControlPanel;
 import frc.robot.subsystems.Intake;
 import frc.robot.commands.DriveArcade;
+import frc.robot.commands.DriveStraight;
 import frc.robot.commands.GalacticSearch;
 import frc.robot.commands.GetGameColor;
 
@@ -47,7 +48,8 @@ import frc.robot.commands.GetGameColor;
  */
 public class RobotContainer {
 
-  private final GalacticSearch m_GalacticSearch = new GalacticSearch(m_drivetrain,intakeObject,cameraObject);
+  //private final GalacticSearch m_AutoCommand = new GalacticSearch(m_drivetrain,intakeObject,cameraObject);
+  private final DriveStraight m_AutoCommand = new DriveStraight(m_drivetrain);
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   public static Drivetrain m_drivetrain = new Drivetrain();
@@ -190,7 +192,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return m_GalacticSearch;
+    return m_AutoCommand;
     
     //return m_chooser.getSelected();
   }

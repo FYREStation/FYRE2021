@@ -194,7 +194,9 @@ public class DriveStraight extends CommandBase {
 	public void driveArc(double radius, double degree, boolean isForward, double realSpeed){
 		drive_train.resetLeftDriveEncoderCount();
 		drive_train.resetRightDriveEncoderCount();
-		double currentPlace; 
+		double currentPlace;
+		double initialAngle;
+		double currentAngle; 
 		double destination;
 		double distanceRightArc;
 		double distanceLeftArc;
@@ -232,12 +234,15 @@ public class DriveStraight extends CommandBase {
 		}else if(rightSpeedPWM < 0.5 || leftSpeedPWM < 0.5){
 			System.out.println("SPEED TOO LOW!");
 		}else{*/
+
+		/*
 			if (isForward){
 				//drive_train.resetLeftDriveEncoderCount();
 				//drive_train.resetRightDriveEncoderCount();
 
 				drive_train.tankDriving((leftSpeedPWM+0.03), rightSpeedPWM);
 				if(distanceLeftArc > distanceRightArc){
+					currentAngle = drive_train.getGyro();
 					currentPlace = drive_train.getLeftDriveEncoderDistance();
 					destination = currentPlace + distanceLeftArc;
 					while(currentPlace < destination){
@@ -274,6 +279,40 @@ public class DriveStraight extends CommandBase {
 				}
 			}
 		//}
+		*/
+		currentAngle = drive_train.getGyro();
+		initialAngle = drive_train.getGyro();
+		
+		if(isForward){
+			drive_train.tankDriving(leftSpeedPWM, rightSpeedPWM);
+			if(degree > 0)
+			{
+				while(currentAngle < initialAngle + degree)
+				{
+					currentAngle = drive_train.getGyro();
+				}
+			}else{
+				while(currentAngle > initialAngle + degree)
+				{
+					currentAngle = drive_train.getGyro();
+				}
+			}
+		}else{
+			drive_train.tankDriving(-leftSpeedPWM, -rightSpeedPWM);	
+			if(degree > 0)
+			{
+				while(currentAngle < initialAngle + degree)
+				{
+					currentAngle = drive_train.getGyro();
+				}
+			}else{
+				while(currentAngle > initialAngle + degree)
+				{
+					currentAngle = drive_train.getGyro();
+				}
+			}
+		}
+
 		drive_train.resetLeftDriveEncoderCount();
 		drive_train.resetRightDriveEncoderCount();
 	}
@@ -300,18 +339,19 @@ public class DriveStraight extends CommandBase {
 	}
 	  
 	public void driveSlalom(){
-		this.driveArc(30, 95, true, 35.0);
-		this.driveArc(30, -70, true, 35.0);
-
-		pausing(500);
-		this.driveStraightDistance(100, true, 26);
 		
-		this.driveArc(30, -90, true, 35.0);
-		this.driveArc(30, 360, true, 35.0);
+		this.driveArc(30, 90, true, 28);
+		this.driveArc(30, -80, true, 28);
+		this.driveStraightDistance(120, true, 26);
+		this.driveArc(30, -90, true, 28);
+		this.driveArc(30, 360, true, 28);
+		/*
 		this.driveArc(30, -90, true, 35.0);
 		this.driveStraightDistance(120, true, 26);
 		this.driveArc(30, -90, true, 35.0);
 		this.driveArc(30, 90, true, 35.0);
+		*/
+	
 		isFinished();
 		
 	}

@@ -106,18 +106,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-   	m_galcSearch = m_robotContainer.getAutonomousCommand();
-    
+   	//m_galcSearch = m_robotContainer.getAutonomousCommand();
+    driveSlalom = m_robotContainer.getAutonomousCommand();
+
     // schedule the autonomous command (example)
     if (m_galcSearch != null) {
       m_galcSearch.schedule();
     }
     
-    /*
+    
     if(driveSlalom != null){
       driveSlalom.schedule();
     }
-    */
+    
     
     
   }
@@ -151,11 +152,11 @@ public class Robot extends TimedRobot {
       m_galcSearch.cancel();
     }
     
-    /*
+    
     if(driveSlalom != null){
       driveSlalom.cancel();
     }
-    */
+    
     
   }
 

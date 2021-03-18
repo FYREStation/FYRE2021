@@ -26,8 +26,6 @@ public class GalacticSearch extends CommandBase {
 	private Camera theCamera;
 	private VisionThread visionThread;
 
-	private double centerX;
-	private double centerY;
 	private final Object imgLock = new Object();
 	private static final int IMG_WIDTH = 640; //On testing day make sure we googled the right camera
 	private static final int IMG_HEIGHT = 480;
@@ -35,10 +33,12 @@ public class GalacticSearch extends CommandBase {
 	public static int retrievalCount = 0;
 	private boolean isInRetrieval = false;
 	
+	private double centerX = IMG_WIDTH/2;
+	private double centerY;
+
     public GalacticSearch(Drivetrain driveTrain, Intake theIntake, Camera allCamera) {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
-		
 		drive_train = driveTrain;
 		the_Intake = theIntake;
         addRequirements(drive_train);
@@ -51,6 +51,7 @@ public class GalacticSearch extends CommandBase {
 	@Override
 	public void initialize() {
 		startProcessing();
+		pausing(1000);
 	} 
 
 	// Called repeatedly when this Command is scheduled to run
@@ -77,12 +78,12 @@ public class GalacticSearch extends CommandBase {
 		theCamera.getCamera().setResolution(IMG_WIDTH, IMG_HEIGHT);
 		if (pipeline.findBlobsOutput().toArray().length > 0) {
 			
-			//Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
-			synchronized (imgLock) {
+			synchronized(imgLock){
+				//Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
 				centerX = pipeline.findBlobsOutput().toArray()[0].pt.x;
 				centerY = pipeline.findBlobsOutput().toArray()[0].pt.y;
-				System.out.println("Pipeline is printing: " + pipeline.findBlobsOutput().toArray()[0].pt.x);
-				System.out.println("Pipeline is printing: " + pipeline.findBlobsOutput().toArray()[0].pt.y);
+				System.out.println("Pipeline [x] is: " + pipeline.findBlobsOutput().toArray()[0].pt.x);
+				System.out.println("Pipeline [y] is: " + pipeline.findBlobsOutput().toArray()[0].pt.y);
 			}
 		}
 		
@@ -93,13 +94,14 @@ public class GalacticSearch extends CommandBase {
 	}
 
 	public void updateImage(){
-			if(!isInRetrieval){
-			synchronized (imgLock) {
+		System.out.println("numObjectsDetected: " + numObjectsDetected);
+		if(!isInRetrieval){
+			synchronized(imgLock){
 				centerX = this.centerX;
 				centerY = this.centerY;
 			}
-
-			double turn = ((centerX - (IMG_WIDTH / 2))/1280); //Change if ball is not centered on camera
+			
+			double turn = ((centerX - (IMG_WIDTH / 2))/1500); //Change if ball is not centered on camera
 			
 			double turnTotal = 0.2;
 			if(turn < 0){
@@ -107,20 +109,35 @@ public class GalacticSearch extends CommandBase {
 			}
 			
 			//System.out.println("Turn :" +turn);
-			drive_train.arcadeDrive(0.55,  turnTotal + turn);
 			
-			if(centerY > 300){
-				ballRetrievalSequence();
+			if(numObjectsDetected > 0){
+				drive_train.arcadeDrive(0.575,  turnTotal + turn);
+				
+			}/*else{
+				if (drive_train.getGyro() > 0){
+					System.out.println("Scanning... Turning Right");
+					drive_train.arcadeDrive(0.0, 0.5);
+				}else{
+					System.out.println("Scanning... Turning Left");
+					drive_train.arcadeDrive(0.0, -0.5);
+				}
 			}
+			*/
 		}
+
+		if(centerY > 300){
+			ballRetrievalSequence();
+		}
+		
 		
 	}
 
 	public void ballRetrievalSequence(){
 		isInRetrieval = true;
 		double currentPlace = drive_train.getLeftDriveEncoderDistance();
-		double destination = currentPlace + 30;
-		drive_train.tankDriving(0.505,0.5);
+		double destination = currentPlace + 35;
+		drive_train.tankDriving(0.53,0.525);
+
 		the_Intake.runIntakeUp();
 		//found out this value soon
 		while(currentPlace < destination){
@@ -139,6 +156,14 @@ public class GalacticSearch extends CommandBase {
 		*/
 
 		isInRetrieval = false;
+	}
+
+	public void pausing(double timeToWait){
+		double startTime = System.currentTimeMillis();
+		double finalTime = startTime + timeToWait;
+		while(startTime < finalTime){
+			startTime = System.currentTimeMillis();
+		}
 	}
 
 }

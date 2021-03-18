@@ -115,10 +115,15 @@ public class Drivetrain extends SubsystemBase {
         return RightDriveEncoder.getDistance();    
     }
 
+    public double getGyro(){
+        System.out.println(-drive_gyro.getAngle());
+        return -drive_gyro.getAngle();
+    }
+
     public void smartBoardTest(){
         SmartDashboard.putNumber("LeftEncoder: ", getLeftDriveEncoderDistance());
         SmartDashboard.putNumber("RightEncoder: ", getRightDriveEncoderDistance());
-        SmartDashboard.putNumber("Gyro: ", drive_gyro.getAngle());
+        SmartDashboard.putNumber("Gyro: ", getGyro());
         SmartDashboard.putNumber("Gyro Rate: ", drive_gyro.getRate());
         SmartDashboard.updateValues();
     }
