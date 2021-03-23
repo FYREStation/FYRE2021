@@ -316,6 +316,132 @@ public class DriveStraight extends CommandBase {
 		drive_train.resetLeftDriveEncoderCount();
 		drive_train.resetRightDriveEncoderCount();
 	}
+
+	public void driveHeading(double radius, double degree, boolean isForward, double realSpeed, double endDegree){
+		drive_train.resetLeftDriveEncoderCount();
+		drive_train.resetRightDriveEncoderCount();
+		double currentPlace;
+		double initialAngle;
+		double currentAngle; 
+		double destination;
+		double distanceRightArc;
+		double distanceLeftArc;
+		double distanceMiddleArc;
+		//double averageRobotSpeed; 
+		double realLeftSpeed;
+		double realRightSpeed;
+		double leftSpeedPWM;
+		double rightSpeedPWM;
+		double speed = realSpeed;
+		double time;
+
+		//This is keeping track of the right wheel's distance traveled
+		//This is checking if it forward and counterclockwise or backward and clockwise
+		//(Inside or outside)
+		
+		if ((isForward && degree > 0) || !(isForward || degree > 0)){
+			distanceRightArc = 2 * Constants.PI * (radius + 15.5) * Math.abs(degree) / 360;
+			distanceMiddleArc = 2 * Constants.PI * radius * Math.abs(degree) / 360;
+			distanceLeftArc = 2 * Constants.PI * (radius - 15.5) * Math.abs(degree) / 360;
+		}else{
+			distanceRightArc = 2 * Constants.PI * (radius -15.5) * Math.abs(degree) / 360;
+			distanceMiddleArc = 2 * Constants.PI * radius * Math.abs(degree) / 360;
+			distanceLeftArc = 2 * Constants.PI * (radius + 15.5) * Math.abs(degree) / 360;
+		}
+
+		time = distanceMiddleArc/speed;
+		realLeftSpeed = distanceLeftArc/time;
+		realRightSpeed = distanceRightArc/time;
+		leftSpeedPWM = ((realLeftSpeed* 0.465) + 44.1)/100; //realLeftSpeed input into PWM equation
+		rightSpeedPWM = ((realRightSpeed* 0.465) + 44.1)/100; //realRightSpeed input into PWM equation
+
+		/*if(rightSpeedPWM > 0.8 || leftSpeedPWM > 0.8){
+			System.out.println("SPEED TOO HIGH!");
+		}else if(rightSpeedPWM < 0.5 || leftSpeedPWM < 0.5){
+			System.out.println("SPEED TOO LOW!");
+		}else{*/
+
+		/*
+			if (isForward){
+				//drive_train.resetLeftDriveEncoderCount();
+				//drive_train.resetRightDriveEncoderCount();
+
+				drive_train.tankDriving((leftSpeedPWM+0.03), rightSpeedPWM);
+				if(distanceLeftArc > distanceRightArc){
+					currentAngle = drive_train.getGyro();
+					currentPlace = drive_train.getLeftDriveEncoderDistance();
+					destination = currentPlace + distanceLeftArc;
+					while(currentPlace < destination){
+						System.out.println("Current Place is:" + currentPlace);		
+						currentPlace = drive_train.getLeftDriveEncoderDistance();
+					}
+				}else{
+					currentPlace = drive_train.getRightDriveEncoderDistance();
+					destination = currentPlace + distanceRightArc;
+					while(currentPlace < destination){
+						System.out.println("Current Place is:" + currentPlace);
+						currentPlace = drive_train.getRightDriveEncoderDistance();		
+					}
+				}
+			}else{
+				//drive_train.resetLeftDriveEncoderCount();
+				//drive_train.resetRightDriveEncoderCount();
+				
+				drive_train.tankDriving(-(leftSpeedPWM-0.03), -rightSpeedPWM);
+				if(distanceLeftArc > distanceRightArc){
+					currentPlace = drive_train.getLeftDriveEncoderDistance();
+					destination = currentPlace - distanceLeftArc;
+					while(currentPlace > destination){
+						System.out.println("Current Place is:" + currentPlace);		
+						currentPlace = drive_train.getLeftDriveEncoderDistance();
+					}
+				}else{
+					currentPlace = drive_train.getRightDriveEncoderDistance();
+					destination = currentPlace - distanceRightArc;
+					while(currentPlace > destination){
+						System.out.println("Current Place is:" + currentPlace);
+						currentPlace = drive_train.getRightDriveEncoderDistance();		
+					}
+				}
+			}
+		//}
+		*/
+		currentAngle = drive_train.getGyro();
+		initialAngle = drive_train.getGyro();
+		
+		if(isForward){
+			drive_train.tankDriving(leftSpeedPWM, rightSpeedPWM);
+			if(degree > 0)
+			{
+				while(currentAngle < endDegree)
+				{
+					currentAngle = drive_train.getGyro();
+				}
+			}else{
+				while(currentAngle > endDegree)
+				{
+					currentAngle = drive_train.getGyro();
+				}
+			}
+		}else{
+			drive_train.tankDriving(-leftSpeedPWM, -rightSpeedPWM);	
+			if(degree > 0)
+			{
+				while(currentAngle < endDegree)
+				{
+					currentAngle = drive_train.getGyro();
+				}
+			}else{
+				while(currentAngle > endDegree)
+				{
+					currentAngle = drive_train.getGyro();
+				}
+			}
+		}
+
+		drive_train.resetLeftDriveEncoderCount();
+		drive_train.resetRightDriveEncoderCount();
+	}
 	
 	public void manualTesting(double speed){
 		if(speed < 0.8){
@@ -340,17 +466,26 @@ public class DriveStraight extends CommandBase {
 	  
 	public void driveSlalom(){
 		
-		this.driveArc(30, 90, true, 28);
-		this.driveArc(30, -80, true, 28);
+		this.driveStraightDistance(10, true, 23);
+		//this.driveArc(30, 90, true, 28);
+		//this.driveArc(30, -73, true, 28);
+		this.driveHeading(30, 90, true, 28, 90);
+		this.driveHeading(30, -90, true, 28, 17);
+
 		this.driveStraightDistance(120, true, 26);
-		this.driveArc(30, -90, true, 28);
-		this.driveArc(30, 360, true, 28);
-		/*
-		this.driveArc(30, -90, true, 35.0);
-		this.driveStraightDistance(120, true, 26);
-		this.driveArc(30, -90, true, 35.0);
-		this.driveArc(30, 90, true, 35.0);
-		*/
+		//this.driveArc(30, -75, true, 28);
+		//this.driveArc(30, 345, true, 28);
+		//this.driveArc(30, -65, true, 28);
+		this.driveHeading(30, -90, true, 28, -75);
+		this.driveStraightDistance(5, true, 19);
+		this.driveHeading(30, 360, true, 28, 255);
+		this.driveHeading(30, -90, true, 28, 200);
+		
+		this.driveStraightDistance(110, true, 26);
+		//this.driveArc(30, -80, true, 28);
+		//this.driveArc(30, 90, true, 28);
+		this.driveHeading(30, -90, true, 28, 110);
+		this.driveHeading(30, 90, true, 28, 200);
 	
 		isFinished();
 		

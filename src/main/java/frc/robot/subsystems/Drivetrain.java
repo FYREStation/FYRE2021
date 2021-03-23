@@ -60,7 +60,7 @@ public class Drivetrain extends SubsystemBase {
         RightSparksAll.setExpiration(99999);
         LeftSparksAll.setSafetyEnabled(false);
         RightSparksAll.setSafetyEnabled(false);
-        differentialDrive.setExpiration(30);
+        differentialDrive.setSafetyEnabled(false);
         LeftDriveEncoder.reset();
         RightDriveEncoder.reset();
         LeftDriveEncoder.setDistancePerPulse(Constants.driveCircum/(2048.0));
