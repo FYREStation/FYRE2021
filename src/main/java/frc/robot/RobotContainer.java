@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.IntakeUp;
+import frc.robot.commands.InvertedDrive;
 import frc.robot.commands.RunLiftUp;
 import frc.robot.commands.RunWinch;
 import frc.robot.commands.SetThrottle;
@@ -144,6 +145,7 @@ public class RobotContainer {
     X5.whenPressed(new ThrottleUp());
     X6.whenPressed(new ThrottleDown());
     
+    X4.whenPressed(new InvertedDrive());
     
   }
 

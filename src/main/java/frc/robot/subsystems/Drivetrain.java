@@ -50,7 +50,7 @@ public class Drivetrain extends SubsystemBase {
     
     //Gyro 
     private Gyro drive_gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
-    
+
     public Drivetrain() {
         //LeftSparksAll.setSafetyEnabled(false);
         //RightSparksAll.setSafetyEnabled(false);
@@ -78,9 +78,11 @@ public class Drivetrain extends SubsystemBase {
         //System.out.println("DisInInches Right:" + this.RightDriveEncoder.getDistance());
         //System.out.println("LEFT DRIVE:" + Constants.leftWheelDistance); 
         //System.out.println("RIGHT DRIVE:" + Constants.rightWheelDistance); 
-        
-        differentialDrive.arcadeDrive(moveSpeed, rotateSpeed);
-        
+        if(Constants.invertedAxis){
+            differentialDrive.arcadeDrive(moveSpeed, rotateSpeed);
+        }else{
+            differentialDrive.arcadeDrive(-moveSpeed, rotateSpeed);
+        }
         //System.out.println("Left"+LeftDriveEncoder.get());
         //System.out.println("Right"+RightDriveEncoder.get());
         //System.out.println("LEFT DRIVE: " + (getLeftDriveEncoderCount()));
