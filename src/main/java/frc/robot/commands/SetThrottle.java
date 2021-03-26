@@ -28,7 +28,7 @@ public class SetThrottle extends CommandBase {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	public void execute() {
-       Constants.throttle  = 0.5;
+       Constants.throttle  = 0.6;
         
         System.out.println("Throttle is now: " + Constants.throttle);
         isFinished();

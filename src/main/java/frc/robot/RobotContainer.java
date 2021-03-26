@@ -121,11 +121,11 @@ public class RobotContainer {
     
     
     //This set is for Xbox driver and joy manipulator
-    /*
+    
     m_drivetrain.setDefaultCommand(new DriveArcade(m_drivetrain,
     () -> xboxController.getY(GenericHID.Hand.kLeft),
     () -> xboxController.getX(GenericHID.Hand.kLeft)));
-    */
+    
 
     D4.whileHeld(new IntakeUp(intakeObject));
     D6.whileHeld(new IntakeDown(intakeObject));
@@ -134,12 +134,12 @@ public class RobotContainer {
     D11.whileHeld(new RunLiftUp(liftObject));
     D9.whileHeld(new RunLiftDown(liftObject));
     //D3.whenPressed(new CircleKick(shooterObject));
-    D8.whileHeld(new ControlledShooting(shooterObject));
-    D12.whileHeld(new KickForward(shooterObject));
+    D1.whileHeld(new ControlledShooting(shooterObject));
+    D2.whileHeld(new KickForward(shooterObject));
     //D10.whileHeld(new KickBackward(shooterObject));
     D3.whileHeld(new GetGameColor(controlPanelObject)); //This gets the color that FMS wants
     D5.whileHeld(new PanelForward(controlPanelObject));
-    D2.toggleWhenPressed(new PositionControl(controlPanelObject)); //This Detects Color
+    D8.toggleWhenPressed(new PositionControl(controlPanelObject)); //This Detects Color
 
     X2.whenPressed(new SetThrottle());
     X5.whenPressed(new ThrottleUp());

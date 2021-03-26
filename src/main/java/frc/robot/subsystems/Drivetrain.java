@@ -60,6 +60,7 @@ public class Drivetrain extends SubsystemBase {
         RightSparksAll.setExpiration(99999);
         LeftSparksAll.setSafetyEnabled(false);
         RightSparksAll.setSafetyEnabled(false);
+        differentialDrive.setExpiration(999999);
         differentialDrive.setSafetyEnabled(false);
         LeftDriveEncoder.reset();
         RightDriveEncoder.reset();
@@ -118,7 +119,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getGyro(){
-        System.out.println(-drive_gyro.getAngle());
+        //System.out.println(-drive_gyro.getAngle());
         return -drive_gyro.getAngle();
     }
 
