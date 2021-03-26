@@ -29,7 +29,7 @@ public class ThrottleUp extends CommandBase {
 	@Override
 	public void execute() {
         if (Constants.throttle < 1.0){
-            Constants.throttle  += 0.05;
+            Constants.throttle  += 0.025;
         }
         System.out.println("Throttle is now: " + Constants.throttle);
         isFinished();
