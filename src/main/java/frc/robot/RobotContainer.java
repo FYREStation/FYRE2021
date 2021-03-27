@@ -49,9 +49,6 @@ import frc.robot.commands.GetGameColor;
  */
 public class RobotContainer {
 
-  private final GalacticSearch m_AutoCommand = new GalacticSearch(m_drivetrain,intakeObject,cameraObject);
-  //private final DriveStraight m_AutoCommand = new DriveStraight(m_drivetrain);
-
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   public static Drivetrain m_drivetrain = new Drivetrain();
   public static Lift liftObject = new Lift();
@@ -59,6 +56,9 @@ public class RobotContainer {
   public static Camera cameraObject = new Camera();
   public static Intake intakeObject = new Intake();
   public static ControlPanel controlPanelObject = new ControlPanel();
+  
+  private final GalacticSearch m_AutoCommand = new GalacticSearch(m_drivetrain,intakeObject,cameraObject);
+  //private final DriveStraight m_AutoCommand = new DriveStraight(m_drivetrain);
 
   // The robot's subsystems and commands are defined here...
   public static Joystick driverController = new Joystick(Constants.DRIVER_CONTROLLER);
