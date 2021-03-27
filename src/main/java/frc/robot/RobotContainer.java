@@ -49,8 +49,8 @@ import frc.robot.commands.GetGameColor;
  */
 public class RobotContainer {
 
-  //private final GalacticSearch m_AutoCommand = new GalacticSearch(m_drivetrain,intakeObject,cameraObject);
-  private final DriveStraight m_AutoCommand = new DriveStraight(m_drivetrain);
+  private final GalacticSearch m_AutoCommand = new GalacticSearch(m_drivetrain,intakeObject,cameraObject);
+  //private final DriveStraight m_AutoCommand = new DriveStraight(m_drivetrain);
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   public static Drivetrain m_drivetrain = new Drivetrain();

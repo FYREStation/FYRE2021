@@ -35,6 +35,10 @@ public class GalacticSearch extends CommandBase {
 	
 	private double centerX = IMG_WIDTH/2;
 	private double centerY;
+	private boolean isRed = true;
+	private double distToFirstCell = 0;
+	private int collected = 0;
+	private double currentHeading = 0;
 
     public GalacticSearch(Drivetrain driveTrain, Intake theIntake, Camera allCamera) {
 		// Use requires() here to declare subsystem dependencies
@@ -51,7 +55,7 @@ public class GalacticSearch extends CommandBase {
 	@Override
 	public void initialize() {
 		startProcessing();
-		pausing(1000);
+		drive_train.resetGyro();
 	} 
 
 	// Called repeatedly when this Command is scheduled to run
@@ -88,6 +92,7 @@ public class GalacticSearch extends CommandBase {
 		}
 		
 		numObjectsDetected = pipeline.findBlobsOutput().toArray().length;
+		currentHeading = drive_train.getGyro();
 		});
 		visionThread.start();
 		
@@ -126,7 +131,88 @@ public class GalacticSearch extends CommandBase {
 		}
 
 		if(centerY > 300){
-			ballRetrievalSequence();
+			isInRetrieval = true;
+			double currentPlace = drive_train.getLeftDriveEncoderDistance();
+			double destination = currentPlace + 35;
+			drive_train.tankDriving(0.53,0.525);
+
+			the_Intake.runIntakeUp();
+			//found out this value soon
+			while(currentPlace < destination){
+				currentPlace = drive_train.getLeftDriveEncoderDistance();
+				
+			}
+			drive_train.tankDriving(0, 0);
+			the_Intake.stopIntake();
+			collected++;
+			
+			if(collected == 1)
+			{
+				distToFirstCell = drive_train.getLeftDriveEncoderDistance();
+			}
+
+			if(distToFirstCell > 100)
+			{
+				isRed = false;
+			}
+
+			if(isRed && collected == 1)
+			{
+				currentHeading = drive_train.getGyro();
+				drive_train.arcadeDrive(0, -0.55);
+				while(currentHeading > -28)
+				{
+					currentHeading = drive_train.getGyro();
+				}
+				drive_train.arcadeDrive(0, 0);
+			}
+
+			if(isRed && collected == 2)
+			{
+				currentHeading = drive_train.getGyro();
+				drive_train.arcadeDrive(0, 0.55);
+				while(currentHeading < 45)
+				{
+					currentHeading = drive_train.getGyro();
+				}
+				drive_train.arcadeDrive(0, 0);
+			}
+
+			if(!isRed && collected == 1)
+			{
+				currentHeading = drive_train.getGyro();
+				drive_train.arcadeDrive(0, 0.55);
+				while(currentHeading < 50)
+				{
+					currentHeading = drive_train.getGyro();
+				}
+				drive_train.arcadeDrive(0, 0);
+			}
+
+			if(!isRed && collected == 2)
+			{
+				currentHeading = drive_train.getGyro();
+				drive_train.arcadeDrive(0, 0.55);
+				while(currentHeading > -30)
+				{
+					currentHeading = drive_train.getGyro();
+				}
+				drive_train.arcadeDrive(0, 0);
+			}
+
+			if(collected == 3)
+			{
+				endOfProgram();
+			}
+			/*
+			drive_train.arcadeDrive(0, -0.2);
+			while (numObjectsDetected == 0){
+				System.out.println("Scanning... No objects detected..");
+			}
+			drive_train.arcadeDrive(0.0, 0.0);
+			*/
+
+			isInRetrieval = false;
 		}
 		
 		
@@ -146,7 +232,66 @@ public class GalacticSearch extends CommandBase {
 		}
 		drive_train.tankDriving(0, 0);
 		the_Intake.stopIntake();
+		collected++;
 		
+		if(collected == 1)
+		{
+			distToFirstCell = drive_train.getLeftDriveEncoderDistance();
+		}
+
+		if(distToFirstCell > 100)
+		{
+			isRed = false;
+		}
+
+		if(isRed && collected == 1)
+		{
+			currentHeading = drive_train.getGyro();
+			drive_train.arcadeDrive(0, -0.55);
+			while(currentHeading > -28)
+			{
+				currentHeading = drive_train.getGyro();
+			}
+			drive_train.arcadeDrive(0, 0);
+		}
+
+		if(isRed && collected == 2)
+		{
+			currentHeading = drive_train.getGyro();
+			drive_train.arcadeDrive(0, 0.55);
+			while(currentHeading < 45)
+			{
+				currentHeading = drive_train.getGyro();
+			}
+			drive_train.arcadeDrive(0, 0);
+		}
+
+		if(!isRed && collected == 1)
+		{
+			currentHeading = drive_train.getGyro();
+			drive_train.arcadeDrive(0, 0.55);
+			while(currentHeading < 50)
+			{
+				currentHeading = drive_train.getGyro();
+			}
+			drive_train.arcadeDrive(0, 0);
+		}
+
+		if(!isRed && collected == 2)
+		{
+			currentHeading = drive_train.getGyro();
+			drive_train.arcadeDrive(0, 0.55);
+			while(currentHeading > -30)
+			{
+				currentHeading = drive_train.getGyro();
+			}
+			drive_train.arcadeDrive(0, 0);
+		}
+
+		if(collected == 3)
+		{
+			endOfProgram();
+		}
 		/*
 		drive_train.arcadeDrive(0, -0.2);
 		while (numObjectsDetected == 0){
@@ -163,6 +308,53 @@ public class GalacticSearch extends CommandBase {
 		double finalTime = startTime + timeToWait;
 		while(startTime < finalTime){
 			startTime = System.currentTimeMillis();
+		}
+	}
+
+	public void endOfProgram()
+	{
+		double currentPlace = 0;
+		drive_train.resetLeftDriveEncoderCount();
+		currentHeading = drive_train.getGyro();
+		if(currentHeading > 10)
+		{
+			drive_train.arcadeDrive(0, -0.55);
+			while(currentHeading > 10)
+			{
+				currentHeading = drive_train.getGyro();
+			}
+		}
+		else if(currentHeading < -10)
+		{
+			drive_train.arcadeDrive(0, 0.55);
+			while(currentHeading < -10)
+			{
+				currentHeading = drive_train.getGyro();
+			}
+		}
+		else
+		{
+			if(isRed)
+			{
+				drive_train.arcadeDrive(0.55, 0);
+				drive_train.resetLeftDriveEncoderCount();
+				while(currentPlace < 150)
+				{
+					currentPlace = drive_train.getLeftDriveEncoderDistance();
+				}
+				end(false);
+				
+			}
+			else
+			{
+				drive_train.arcadeDrive(0.55, 0);
+				drive_train.resetLeftDriveEncoderCount();
+				while(currentPlace < 60)
+				{
+					currentPlace = drive_train.getLeftDriveEncoderDistance();
+				}
+				end(false);
+			}
 		}
 	}
 
