@@ -116,7 +116,7 @@ public class GalacticSearch extends CommandBase {
 			//System.out.println("Turn :" +turn);
 			
 			if(numObjectsDetected > 0){
-				drive_train.arcadeDrive(0.575,  turnTotal + turn);
+				drive_train.arcadeDrive(0.65,  turnTotal + turn);
 				
 			}/*else{
 				if (drive_train.getGyro() > 0){
@@ -141,7 +141,7 @@ public class GalacticSearch extends CommandBase {
 		isInRetrieval = true;
 		double currentPlace = drive_train.getLeftDriveEncoderDistance();
 		double destination = currentPlace + 35;
-		drive_train.tankDriving(0.53,0.525);
+		drive_train.tankDriving(0.58,0.575);
 
 		the_Intake.runIntakeUp();
 		//found out this value soon

@@ -108,7 +108,7 @@ public class DriveStraight extends CommandBase {
 		}else{*/
 			if(isForward){
 				destination = currentPlace + distance;
-				drive_train.tankDriving((speedPWM), speedPWM);
+				drive_train.tankDriving((speedPWM + 0.02), speedPWM);
 
 				while(currentPlace < destination){
 					System.out.println("Current Place is:" + currentPlace);
@@ -466,26 +466,26 @@ public class DriveStraight extends CommandBase {
 	  
 	public void driveSlalom(){
 		
-		this.driveStraightDistance(10, true, 23);
+		this.driveStraightDistance(10, true, 45);
 		//this.driveArc(30, 90, true, 28);
 		//this.driveArc(30, -73, true, 28);
-		this.driveHeading(30, 90, true, 28, 90);
-		this.driveHeading(30, -90, true, 28, 17);
+		this.driveHeading(30, 90, true, 42, 55);
+		this.driveHeading(30, -90, true, 42, 12.5);
 
-		this.driveStraightDistance(120, true, 26);
+		this.driveStraightDistance(85, true, 35);
 		//this.driveArc(30, -75, true, 28);
 		//this.driveArc(30, 345, true, 28);
 		//this.driveArc(30, -65, true, 28);
-		this.driveHeading(30, -90, true, 28, -75);
-		this.driveStraightDistance(5, true, 19);
-		this.driveHeading(30, 360, true, 28, 255);
-		this.driveHeading(30, -90, true, 28, 200);
+		this.driveHeading(30, -90, true, 42, -60);
+		//this.driveStraightDistance(5, true, 42);
+		this.driveHeading(27, 360, true, 45, 240);
+		this.driveHeading(35, -90, true, 35, 180);
 		
-		this.driveStraightDistance(110, true, 26);
+		this.driveStraightDistance(50, true, 35);
 		//this.driveArc(30, -80, true, 28);
 		//this.driveArc(30, 90, true, 28);
-		this.driveHeading(30, -90, true, 28, 110);
-		this.driveHeading(30, 90, true, 28, 200);
+		this.driveHeading(35, -90, true, 35, 120);
+		this.driveHeading(35, 90, true, 35, 180);
 	
 		isFinished();
 		
