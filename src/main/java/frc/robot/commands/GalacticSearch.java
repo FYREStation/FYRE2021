@@ -58,6 +58,7 @@ public class GalacticSearch extends CommandBase {
 		startProcessing();
 		drive_train.resetGyro();
 		theEntireSequence();
+		//drive_train.resetGyro();
 	} 
 
 	// Called repeatedly when this Command is scheduled to run

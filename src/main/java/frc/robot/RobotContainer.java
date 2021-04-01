@@ -56,8 +56,8 @@ public class RobotContainer {
   public static Intake intakeObject = new Intake();
   public static ControlPanel controlPanelObject = new ControlPanel();
   
-  private final GalacticSearch m_AutoCommand = new GalacticSearch(m_drivetrain,intakeObject,cameraObject);
-  //private final DriveStraight m_AutoCommand = new DriveStraight(m_drivetrain);
+  //private final GalacticSearch m_AutoCommand = new GalacticSearch(m_drivetrain,intakeObject,cameraObject);
+  private final DriveStraight m_AutoCommand = new DriveStraight(m_drivetrain);
 
   // The robot's subsystems and commands are defined here...
   public static Joystick driverController = new Joystick(Constants.DRIVER_CONTROLLER);
