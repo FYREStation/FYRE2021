@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Servo;
@@ -19,7 +18,7 @@ public class Camera extends SubsystemBase{
 
     public Camera(){
         //cameraServo = new Servo(Constants.CAMERA_SERVO);
-        prepareVisionProcessing();
+
         
     }
 
@@ -77,6 +76,5 @@ public class Camera extends SubsystemBase{
     @Override
     public void periodic() {
       //servoTest();
-      
     }
 }

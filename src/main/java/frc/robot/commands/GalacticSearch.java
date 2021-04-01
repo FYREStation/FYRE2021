@@ -27,17 +27,16 @@ public class GalacticSearch extends CommandBase {
 	private VisionThread visionThread;
 
 	private final Object imgLock = new Object();
-	private static final int IMG_WIDTH = 640; //On testing day make sure we googled the right camera
+	private static final int IMG_WIDTH = 720; //On testing day make sure we googled the right camera
 	private static final int IMG_HEIGHT = 480;
 	private int numObjectsDetected = 0;
 	public static int retrievalCount = 0;
-	private boolean isInRetrieval = false;
 	
 	private double centerX = IMG_WIDTH/2;
 	private double centerY;
 	private boolean isRed = true;
-	private double distToFirstCell = 0;
-	private int collected = 0;
+	private double startingDistance;
+	private double finalDistance;
 	private double currentHeading = 0;
 
     public GalacticSearch(Drivetrain driveTrain, Intake theIntake, Camera allCamera) {
@@ -54,20 +53,23 @@ public class GalacticSearch extends CommandBase {
 	// Called just before this Command runs the first time
 	@Override
 	public void initialize() {
+		startingDistance = drive_train.getLeftDriveEncoderDistance();
+		finalDistance = startingDistance + 100;
 		startProcessing();
 		drive_train.resetGyro();
+		theEntireSequence();
 	} 
 
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	public void execute() {
-		updateImage();
+		//findBall();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	public boolean isFinished() {
-        return false;
+        return true;
 	}
 
 	// Called once after isFinished returns true
@@ -79,15 +81,15 @@ public class GalacticSearch extends CommandBase {
 
 	public void startProcessing(){
 		visionThread = new VisionThread(theCamera.getCamera(), new VisionProcessingPipeline(), pipeline -> {
-		theCamera.getCamera().setResolution(IMG_WIDTH, IMG_HEIGHT);
+		
 		if (pipeline.findBlobsOutput().toArray().length > 0) {
 			
-			synchronized(imgLock){
-				//Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
-				centerX = pipeline.findBlobsOutput().toArray()[0].pt.x;
-				centerY = pipeline.findBlobsOutput().toArray()[0].pt.y;
-				System.out.println("Pipeline [x] is: " + pipeline.findBlobsOutput().toArray()[0].pt.x);
-				System.out.println("Pipeline [y] is: " + pipeline.findBlobsOutput().toArray()[0].pt.y);
+			//Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+			synchronized (imgLock) {
+			//	centerX = r.x + (r.width / 2);
+			//	centerY = r.y + (r.length/2);
+			System.out.println("Pipeline is printing: " + pipeline.findBlobsOutput().toArray()[0].pt.x);
+			System.out.println("Pipeline is printing: " + pipeline.findBlobsOutput().toArray()[0].pt.y);
 			}
 		}
 		
@@ -98,128 +100,69 @@ public class GalacticSearch extends CommandBase {
 		
 	}
 
-	public void updateImage(){
-		System.out.println("numObjectsDetected: " + numObjectsDetected);
-		if(!isInRetrieval){
-			synchronized(imgLock){
-				centerX = this.centerX;
-				centerY = this.centerY;
-			}
-			
-			double turn = ((centerX - (IMG_WIDTH / 2))/1500); //Change if ball is not centered on camera
-			
-			double turnTotal = 0.2;
-			if(turn < 0){
-				turnTotal = -turnTotal;
-			}
-			
-			//System.out.println("Turn :" +turn);
-			
-			if(numObjectsDetected > 0){
-				drive_train.arcadeDrive(0.65,  turnTotal + turn);
-				
-			}/*else{
-				if (drive_train.getGyro() > 0){
-					System.out.println("Scanning... Turning Right");
-					drive_train.arcadeDrive(0.0, 0.5);
-				}else{
-					System.out.println("Scanning... Turning Left");
-					drive_train.arcadeDrive(0.0, -0.5);
-				}
-			}
-			*/
+	public void findBall(){
+		synchronized (imgLock) {
+			centerX = this.centerX;
+			centerY = this.centerY;
+		}
+		double turn = centerX - (IMG_WIDTH / 2); 
+		
+		while(centerY < 300){
+			drive_train.arcadeDrive(0.65, turn * 0.005);
 		}
 
-		if(centerY > 300){
-			ballRetrievalSequence();
-		}
-		
-		
 	}
 
-	public void ballRetrievalSequence(){
-		isInRetrieval = true;
+	public void getBall(){
 		double currentPlace = drive_train.getLeftDriveEncoderDistance();
-		double destination = currentPlace + 35;
-		drive_train.tankDriving(0.58,0.575);
-
+		double destination = currentPlace + 15;
+		drive_train.tankDriving(0.6,0.6);
 		the_Intake.runIntakeUp();
-		//found out this value soon
+
 		while(currentPlace < destination){
 			currentPlace = drive_train.getLeftDriveEncoderDistance();
 			
 		}
 		drive_train.tankDriving(0, 0);
 		the_Intake.stopIntake();
-		collected++;
+		retrievalCount++;
+	}
+
+	public void transitionToNextBall(){
+
 		
-		if(collected == 1)
+		if(isRed && retrievalCount == 1)
 		{
-			distToFirstCell = drive_train.getLeftDriveEncoderDistance();
-		}
-
-		if(distToFirstCell > 100)
-		{
-			isRed = false;
-		}
-
-		if(isRed && collected == 1)
-		{
-			currentHeading = drive_train.getGyro();
 			drive_train.arcadeDrive(0, -0.55);
-			while(currentHeading > -28)
+			while(numObjectsDetected == 0)
 			{
-				currentHeading = drive_train.getGyro();
-			}
-			drive_train.arcadeDrive(0, 0);
+				System.out.println("Looking for Ball!");
+			}			
 		}
-
-		if(isRed && collected == 2)
+		else if(isRed && retrievalCount == 2)
 		{
-			currentHeading = drive_train.getGyro();
 			drive_train.arcadeDrive(0, 0.55);
-			while(currentHeading < 45)
+			while(numObjectsDetected == 0)
 			{
-				currentHeading = drive_train.getGyro();
-			}
-			drive_train.arcadeDrive(0, 0);
+				System.out.println("Looking for Ball!");
+			}		
 		}
-
-		if(!isRed && collected == 1)
+		else if(!isRed && retrievalCount == 1)
 		{
-			currentHeading = drive_train.getGyro();
 			drive_train.arcadeDrive(0, 0.55);
-			while(currentHeading < 50)
+			while(numObjectsDetected == 0)
 			{
-				currentHeading = drive_train.getGyro();
-			}
-			drive_train.arcadeDrive(0, 0);
+				System.out.println("Looking for Ball!");
+			}	
 		}
-
-		if(!isRed && collected == 2)
+		else if(!isRed && retrievalCount == 2)
 		{
-			currentHeading = drive_train.getGyro();
-			drive_train.arcadeDrive(0, 0.55);
-			while(currentHeading > -30)
+			drive_train.arcadeDrive(0, -0.55);
+			while(numObjectsDetected == 0)
 			{
-				currentHeading = drive_train.getGyro();
-			}
-			drive_train.arcadeDrive(0, 0);
+				System.out.println("Looking for Ball!");
+			}	
 		}
-
-		if(collected == 3)
-		{
-			endOfProgram();
-		}
-		/*
-		drive_train.arcadeDrive(0, -0.2);
-		while (numObjectsDetected == 0){
-			System.out.println("Scanning... No objects detected..");
-		}
-		drive_train.arcadeDrive(0.0, 0.0);
-		*/
-
-		isInRetrieval = false;
 	}
 
 	public void pausing(double timeToWait){
@@ -275,6 +218,27 @@ public class GalacticSearch extends CommandBase {
 				end(false);
 			}
 		}
+	}
+
+	public void determinePath(){
+		startingDistance = drive_train.getLeftDriveEncoderDistance();
+		if(startingDistance > finalDistance){
+			isRed = false;
+		}
+	}
+
+	public void theEntireSequence(){
+		findBall();
+		getBall();
+		determinePath();
+		transitionToNextBall();
+		findBall();
+		getBall();
+		transitionToNextBall();
+		findBall();
+		getBall();
+		transitionToNextBall();
+		endOfProgram();
 	}
 
 }

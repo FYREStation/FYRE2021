@@ -37,7 +37,6 @@ import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.ControlPanel;
 import frc.robot.subsystems.Intake;
 import frc.robot.commands.DriveArcade;
-import frc.robot.commands.DriveStraight;
 import frc.robot.commands.GalacticSearch;
 import frc.robot.commands.GetGameColor;
 
@@ -49,7 +48,7 @@ import frc.robot.commands.GetGameColor;
  */
 public class RobotContainer {
 
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
+  //SendableChooser<Command> m_chooser = new SendableChooser<>();
   public static Drivetrain m_drivetrain = new Drivetrain();
   public static Lift liftObject = new Lift();
   public static ShooterAndKick shooterObject = new ShooterAndKick();
