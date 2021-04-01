@@ -40,7 +40,8 @@ public class DriveStraight extends CommandBase {
 	@Override
 	public void initialize() {
         //driveStraightDistance(30,true);
-		driveSlalom();
+		//driveSlalom();
+		driveBarrel();
 	} 
 
 	// Called repeatedly when this Command is scheduled to run
@@ -454,13 +455,13 @@ public class DriveStraight extends CommandBase {
 	//These are all the paths
 	//We may need to fix Barrel
 	public void driveBarrel(){
-		this.driveStraightDistance(90, true, 27.724);
-		this.driveArc(30, -354.4413274, true, 27.724);
-		this.driveStraightDistance(95.39, true, 27.724);
-		this.driveArc(21, 309.4413274, true, 27.724);
-		this.driveStraightDistance(84.85, true, 27.724);
-		this.driveArc(21, 225, true, 27.724);
-		this.driveStraightDistance(240, true, 27.724);
+		this.driveStraightDistance(100, true, 40);
+		this.driveHeading(25, -354.4413274, true, 50, -334.44);
+		this.driveStraightDistance(100, true, 40);
+		this.driveHeading(24, 309.4413274, true, 50, -60);
+		this.driveStraightDistance(84.85, true, 40);
+		this.driveHeading(19, 225, true, 50, 150);
+		this.driveStraightDistance(245, true, 40);
 		isFinished();
 	}
 	  
@@ -478,13 +479,13 @@ public class DriveStraight extends CommandBase {
 		//this.driveArc(30, -65, true, 28);
 		this.driveHeading(30, -90, true, 42, -60);
 		//this.driveStraightDistance(5, true, 42);
-		this.driveHeading(27, 360, true, 45, 240);
-		this.driveHeading(35, -90, true, 35, 180);
+		this.driveHeading(25, 360, true, 50, 240);
+		this.driveHeading(30, -90, true, 35, 180);
 		
-		this.driveStraightDistance(50, true, 35);
+		this.driveStraightDistance(52.5, true, 35);
 		//this.driveArc(30, -80, true, 28);
 		//this.driveArc(30, 90, true, 28);
-		this.driveHeading(35, -90, true, 35, 120);
+		this.driveHeading(35, -90, true, 35, 110);
 		this.driveHeading(35, 90, true, 35, 180);
 	
 		isFinished();

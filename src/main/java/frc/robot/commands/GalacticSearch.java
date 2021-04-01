@@ -55,7 +55,7 @@ public class GalacticSearch extends CommandBase {
 	@Override
 	public void initialize() {
 		startProcessing();
-		drive_train.resetGyro();
+		//drive_train.resetGyro();
 	} 
 
 	// Called repeatedly when this Command is scheduled to run
@@ -86,8 +86,8 @@ public class GalacticSearch extends CommandBase {
 				//Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
 				centerX = pipeline.findBlobsOutput().toArray()[0].pt.x;
 				centerY = pipeline.findBlobsOutput().toArray()[0].pt.y;
-				System.out.println("Pipeline [x] is: " + pipeline.findBlobsOutput().toArray()[0].pt.x);
-				System.out.println("Pipeline [y] is: " + pipeline.findBlobsOutput().toArray()[0].pt.y);
+				//System.out.println("Pipeline [x] is: " + pipeline.findBlobsOutput().toArray()[0].pt.x);
+				//System.out.println("Pipeline [y] is: " + pipeline.findBlobsOutput().toArray()[0].pt.y);
 			}
 		}
 		
@@ -99,16 +99,18 @@ public class GalacticSearch extends CommandBase {
 	}
 
 	public void updateImage(){
+		//double centerX;
+		//double centerY;
 		System.out.println("numObjectsDetected: " + numObjectsDetected);
 		if(!isInRetrieval){
-			synchronized(imgLock){
+			synchronized(imgLock)
+			{
 				centerX = this.centerX;
 				centerY = this.centerY;
 			}
-			
 			double turn = ((centerX - (IMG_WIDTH / 2))/1500); //Change if ball is not centered on camera
 			
-			double turnTotal = 0.2;
+			double turnTotal = 0.3;
 			if(turn < 0){
 				turnTotal = -turnTotal;
 			}
@@ -141,6 +143,7 @@ public class GalacticSearch extends CommandBase {
 		isInRetrieval = true;
 		double currentPlace = drive_train.getLeftDriveEncoderDistance();
 		double destination = currentPlace + 35;
+		
 		drive_train.tankDriving(0.58,0.575);
 
 		the_Intake.runIntakeUp();
@@ -151,7 +154,10 @@ public class GalacticSearch extends CommandBase {
 		}
 		drive_train.tankDriving(0, 0);
 		the_Intake.stopIntake();
+		double currentRotationPlace = drive_train.getLeftDriveEncoderDistance();
+		double rotationDestination;
 		collected++;
+		System.out.println("We have collected: " + collected + "balls");
 		
 		if(collected == 1)
 		{
@@ -165,11 +171,16 @@ public class GalacticSearch extends CommandBase {
 
 		if(isRed && collected == 1)
 		{
+			
+			currentRotationPlace = drive_train.getLeftDriveEncoderDistance();
+			rotationDestination = currentRotationPlace + 7.5;
 			currentHeading = drive_train.getGyro();
-			drive_train.arcadeDrive(0, -0.55);
-			while(currentHeading > -28)
+			drive_train.arcadeDrive(0, -0.65);
+			
+			while(currentRotationPlace < rotationDestination)
 			{
 				currentHeading = drive_train.getGyro();
+				currentRotationPlace = drive_train.getLeftDriveEncoderDistance();
 			}
 			drive_train.arcadeDrive(0, 0);
 		}
@@ -177,7 +188,7 @@ public class GalacticSearch extends CommandBase {
 		if(isRed && collected == 2)
 		{
 			currentHeading = drive_train.getGyro();
-			drive_train.arcadeDrive(0, 0.55);
+			drive_train.arcadeDrive(0, 0.65);
 			while(currentHeading < 45)
 			{
 				currentHeading = drive_train.getGyro();
@@ -188,7 +199,7 @@ public class GalacticSearch extends CommandBase {
 		if(!isRed && collected == 1)
 		{
 			currentHeading = drive_train.getGyro();
-			drive_train.arcadeDrive(0, 0.55);
+			drive_train.arcadeDrive(0, 0.65);
 			while(currentHeading < 50)
 			{
 				currentHeading = drive_train.getGyro();
@@ -199,7 +210,7 @@ public class GalacticSearch extends CommandBase {
 		if(!isRed && collected == 2)
 		{
 			currentHeading = drive_train.getGyro();
-			drive_train.arcadeDrive(0, 0.55);
+			drive_train.arcadeDrive(0, 0.65);
 			while(currentHeading > -30)
 			{
 				currentHeading = drive_train.getGyro();
