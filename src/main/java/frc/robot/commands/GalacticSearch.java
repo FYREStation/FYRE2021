@@ -34,10 +34,13 @@ public class GalacticSearch extends CommandBase {
 	
 	private double centerX = IMG_WIDTH/2;
 	private double centerY;
+<<<<<<< HEAD
 	private boolean isRed = true;
 	private double startingDistance;
 	private double finalDistance;
 	private double currentHeading = 0;
+=======
+>>>>>>> parent of c91ee35 (Added Turning Sequence)
 
     public GalacticSearch(Drivetrain driveTrain, Intake theIntake, Camera allCamera) {
 		// Use requires() here to declare subsystem dependencies
@@ -56,9 +59,13 @@ public class GalacticSearch extends CommandBase {
 		startingDistance = drive_train.getLeftDriveEncoderDistance();
 		finalDistance = startingDistance + 100;
 		startProcessing();
+<<<<<<< HEAD
 		drive_train.resetGyro();
 		theEntireSequence();
 		//drive_train.resetGyro();
+=======
+		pausing(1000);
+>>>>>>> parent of c91ee35 (Added Turning Sequence)
 	} 
 
 	// Called repeatedly when this Command is scheduled to run
@@ -95,16 +102,52 @@ public class GalacticSearch extends CommandBase {
 		}
 		
 		numObjectsDetected = pipeline.findBlobsOutput().toArray().length;
-		currentHeading = drive_train.getGyro();
 		});
 		visionThread.start();
 		
 	}
 
+<<<<<<< HEAD
 	public void findBall(){
 		synchronized (imgLock) {
 			centerX = this.centerX;
 			centerY = this.centerY;
+=======
+	public void updateImage(){
+		System.out.println("numObjectsDetected: " + numObjectsDetected);
+		if(!isInRetrieval){
+			synchronized(imgLock){
+				centerX = this.centerX;
+				centerY = this.centerY;
+			}
+			
+			double turn = ((centerX - (IMG_WIDTH / 2))/1500); //Change if ball is not centered on camera
+			
+			double turnTotal = 0.2;
+			if(turn < 0){
+				turnTotal = -turnTotal;
+			}
+			
+			//System.out.println("Turn :" +turn);
+			
+			if(numObjectsDetected > 0){
+				drive_train.arcadeDrive(0.575,  turnTotal + turn);
+				
+			}/*else{
+				if (drive_train.getGyro() > 0){
+					System.out.println("Scanning... Turning Right");
+					drive_train.arcadeDrive(0.0, 0.5);
+				}else{
+					System.out.println("Scanning... Turning Left");
+					drive_train.arcadeDrive(0.0, -0.5);
+				}
+			}
+			*/
+		}
+
+		if(centerY > 300){
+			ballRetrievalSequence();
+>>>>>>> parent of c91ee35 (Added Turning Sequence)
 		}
 		double turn = centerX - (IMG_WIDTH / 2); 
 		
@@ -127,6 +170,7 @@ public class GalacticSearch extends CommandBase {
 		}
 		drive_train.tankDriving(0, 0);
 		the_Intake.stopIntake();
+<<<<<<< HEAD
 		retrievalCount++;
 	}
 
@@ -165,6 +209,18 @@ public class GalacticSearch extends CommandBase {
 				System.out.println("Looking for Ball!");
 			}	
 		}
+=======
+		
+		/*
+		drive_train.arcadeDrive(0, -0.2);
+		while (numObjectsDetected == 0){
+			System.out.println("Scanning... No objects detected..");
+		}
+		drive_train.arcadeDrive(0.0, 0.0);
+		*/
+
+		isInRetrieval = false;
+>>>>>>> parent of c91ee35 (Added Turning Sequence)
 	}
 
 	public void pausing(double timeToWait){
@@ -175,6 +231,7 @@ public class GalacticSearch extends CommandBase {
 		}
 	}
 
+<<<<<<< HEAD
 	public void endOfProgram()
 	{
 		double currentPlace = 0;
@@ -243,4 +300,6 @@ public class GalacticSearch extends CommandBase {
 		endOfProgram();
 	}
 
+=======
+>>>>>>> parent of c91ee35 (Added Turning Sequence)
 }

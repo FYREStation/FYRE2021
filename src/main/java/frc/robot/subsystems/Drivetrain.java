@@ -123,11 +123,6 @@ public class Drivetrain extends SubsystemBase {
         return -drive_gyro.getAngle();
     }
 
-    public void resetGyro()
-    {
-        drive_gyro.calibrate();
-    }
-
     public void smartBoardTest(){
         SmartDashboard.putNumber("LeftEncoder: ", getLeftDriveEncoderDistance());
         SmartDashboard.putNumber("RightEncoder: ", getRightDriveEncoderDistance());

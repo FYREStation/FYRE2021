@@ -48,7 +48,14 @@ import frc.robot.commands.GetGameColor;
  */
 public class RobotContainer {
 
+<<<<<<< HEAD
   //SendableChooser<Command> m_chooser = new SendableChooser<>();
+=======
+  //private final GalacticSearch m_AutoCommand = new GalacticSearch(m_drivetrain,intakeObject,cameraObject);
+  private final DriveStraight m_AutoCommand = new DriveStraight(m_drivetrain);
+
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
+>>>>>>> parent of c91ee35 (Added Turning Sequence)
   public static Drivetrain m_drivetrain = new Drivetrain();
   public static Lift liftObject = new Lift();
   public static ShooterAndKick shooterObject = new ShooterAndKick();
