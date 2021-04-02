@@ -157,6 +157,10 @@ public class Robot extends TimedRobot {
     if(driveSlalom != null){
       driveSlalom.cancel();
     }
+
+    if(galcSearch != null){
+      galcSearch.cancel();
+    }
     
   }
 

@@ -111,6 +111,7 @@ public class GalacticSearch extends CommandBase {
 		while(centerY < 300){
 			drive_train.arcadeDrive(0.65, turn * 0.005);
 		}
+		drive_train.arcadeDrive(0, 0);
 
 	}
 
