@@ -17,7 +17,6 @@ import frc.robot.commands.ControlledShooting;
 import frc.robot.commands.DriveArcade;
 import frc.robot.commands.DriveForwardAutoNoPID;
 import frc.robot.commands.DriveForwardAutoPID;
-import frc.robot.commands.GalacticSearch;
 import frc.robot.commands.GetGameColor;
 import frc.robot.commands.IntakeDown;
 import frc.robot.commands.IntakeUp;
@@ -64,7 +63,6 @@ public class Robot extends TimedRobot {
     Camera thisObject = new Camera();
     //Camera.testingCamera();
     thisObject.prepareVisionProcessing();
-    galcSearch = new GalacticSearch(RobotContainer.m_drivetrain, RobotContainer.intakeObject, thisObject);
     //driveSlalom = new DriveStraight(RobotContainer.m_drivetrain); 
     
   }

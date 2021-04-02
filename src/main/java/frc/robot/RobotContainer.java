@@ -37,8 +37,8 @@ import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.ControlPanel;
 import frc.robot.subsystems.Intake;
 import frc.robot.commands.DriveArcade;
-import frc.robot.commands.GalacticSearch;
 import frc.robot.commands.GetGameColor;
+import frc.robot.commands.DriveStraight;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a

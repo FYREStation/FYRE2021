@@ -10,7 +10,7 @@ import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
-
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Camera extends SubsystemBase{
     public static Servo cameraServo;
@@ -18,19 +18,9 @@ public class Camera extends SubsystemBase{
 
     public Camera(){
         //cameraServo = new Servo(Constants.CAMERA_SERVO);
-
+        prepareVisionProcessing();
         
     }
-
-    public CameraServer normalCamera() {
-        CameraServer backCamera;
-        backCamera = normalCamera();
-        
-        backCamera.startAutomaticCapture();
-        return backCamera;
-    }
-
-
 
     public void prepareVisionProcessing(){     
         // Creates UsbCamera and MjpegServer [1] and connects them
@@ -49,28 +39,9 @@ public class Camera extends SubsystemBase{
         mjpegServer2.setSource(outputStream);
         */
     }
-
-    public static void testingCamera(){
-        CameraServer.getInstance().startAutomaticCapture();
-    }
-
-    public static void displayToSmartDashBoard(){
-        
-    }
     
     public UsbCamera getCamera(){
         return usbCamera;
-    }
-
-    public static void servoTest(){
-        /*
-        if (RobotContainer.driverController.getRawButton(5)){
-            cameraServo.set(0.5);
-        }
-        if(RobotContainer.driverController.getRawButton(3)){
-            cameraServo.set(0.0);
-        }
-        */
     }
 
     @Override
