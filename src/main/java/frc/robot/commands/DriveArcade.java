@@ -22,14 +22,19 @@ public class DriveArcade extends CommandBase {
 	private DoubleSupplier rotate_Speed;
 	private DoubleSupplier XJoyStick;
 	private DoubleSupplier YJoyStick;
+	private DoubleSupplier XRightJoyStick;
+	private DoubleSupplier YRightJoyStick;
 
-	public DriveArcade(Drivetrain driveTrain, DoubleSupplier theY, DoubleSupplier theX) {
+	public DriveArcade(Drivetrain driveTrain, DoubleSupplier theLeftY, DoubleSupplier theLeftX, DoubleSupplier theRightY, DoubleSupplier theRightX) {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
 		
 		drive_train = driveTrain;
-		XJoyStick = theX;
-		YJoyStick = theY;
+		XJoyStick = theLeftX;
+		YJoyStick = theLeftY;
+		XRightJoyStick = theRightX;
+		YRightJoyStick = theRightY;
+		
 		addRequirements(drive_train);
 	}
 
@@ -41,24 +46,34 @@ public class DriveArcade extends CommandBase {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	public void execute() {
+			double yValue;
+			double xValue;
+			//System.out.println(Constants.throttle * move_Speed.getAsDouble() + "and " + Constants.throttle *  rotate_Speed.getAsDouble());
+			if(Constants.isTank){
+				xValue=XRightJoyStick.getAsDouble();	
+			}else{
+				xValue=XJoyStick.getAsDouble();
+			}
 
-		//System.out.println(Constants.throttle * move_Speed.getAsDouble() + "and " + Constants.throttle *  rotate_Speed.getAsDouble());
-		double yValue = YJoyStick.getAsDouble();
-		double xValue = XJoyStick.getAsDouble();
-		if(yValue < 0.2 && yValue > -0.2){
-			yValue = 0.0;
-		} 
-		if(xValue < 0.2 && xValue > -0.2){
-			xValue = 0.0;
-		} 
-		
+			yValue = YJoyStick.getAsDouble();
+	
+			if(yValue < 0.2 && yValue > -0.2){
+				yValue = 0.0;
+			} 
+			if(xValue < 0.2 && xValue > -0.2){
+				xValue = 0.0;
+			} 
+			
 
-		double leftPower = yValue - xValue;
-		double rightPower = yValue + xValue;
-		leftPower = -leftPower;
-		rightPower = -rightPower;
-		drive_train.tankDriving(Constants.throttle * leftPower, Constants.throttle * rightPower);
-		//drive_train.arcadeDrive(Constants.throttle * move_Speed.getAsDouble(), Constants.throttle * YJoyStick.getAsDouble());
+			double leftPower = yValue - xValue;
+			double rightPower = yValue + xValue;
+			leftPower = -leftPower;
+			rightPower = -rightPower;
+			drive_train.tankDriving(Constants.throttle * leftPower, Constants.throttle * rightPower);
+			
+			
+			
+			//drive_train.arcadeDrive(Constants.throttle * move_Speed.getAsDouble(), Constants.throttle * YJoyStick.getAsDouble());
 		
 	}
 

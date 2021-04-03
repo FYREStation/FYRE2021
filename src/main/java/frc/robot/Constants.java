@@ -34,6 +34,7 @@ public final class Constants {
 
     public static double throttle = 0.0;
     public static boolean invertedAxis = false;
+    public static boolean isTank = false;
 
     //Shouldn't there be two axes? One for X and the other for Y???
     public static final int DRIVER_CONTROLLER_MOVE_AXIS = 1;

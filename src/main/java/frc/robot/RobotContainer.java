@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.IntakeUp;
 import frc.robot.commands.InvertedDrive;
+import frc.robot.commands.InvertedTypeDrive;
 import frc.robot.commands.RunLiftUp;
 import frc.robot.commands.RunWinch;
 import frc.robot.commands.SetThrottle;
@@ -123,7 +124,10 @@ public class RobotContainer {
     
     m_drivetrain.setDefaultCommand(new DriveArcade(m_drivetrain,
     () -> (xboxController.getY(GenericHID.Hand.kLeft)),
-    () -> (xboxController.getX(GenericHID.Hand.kLeft))));
+    () -> (xboxController.getX(GenericHID.Hand.kLeft)),
+    () -> (xboxController.getY(GenericHID.Hand.kRight)),
+    () -> (xboxController.getX(GenericHID.Hand.kRight))
+    ));
     
 
     D4.whileHeld(new IntakeUp(intakeObject));
@@ -145,7 +149,7 @@ public class RobotContainer {
     X6.whenPressed(new ThrottleDown());
     
     X4.whenPressed(new InvertedDrive());
-    
+    X3.whenPressed(new InvertedTypeDrive());
   }
 
   /**
