@@ -113,7 +113,7 @@ public class DriveStraight extends CommandBase {
 				drive_train.tankDriving((speedPWM + 0.02), speedPWM);
 
 				while(currentPlace < destination){
-					System.out.println("Current Place is:" + currentPlace);
+					//System.out.println("Current Place is:" + currentPlace);
 					currentPlace = drive_train.getLeftDriveEncoderDistance();
 				}
 
@@ -122,7 +122,7 @@ public class DriveStraight extends CommandBase {
 				drive_train.tankDriving(-(speedPWM-0.03), -speedPWM);
 
 				while(currentPlace > destination){
-					System.out.println("Current Place is:" + currentPlace);
+					//System.out.println("Current Place is:" + currentPlace);
 					currentPlace = drive_train.getLeftDriveEncoderDistance();
 				}
 			}
@@ -496,19 +496,25 @@ public class DriveStraight extends CommandBase {
 	  public void driveBounce(){
 		this.driveStraightDistance(5, true, 40);
 		this.driveHeading(30, 90, true, 40, 90);
-		this.driveStraightDistance(2, true, 40);
-		this.driveStraightDistance(1, false, 25);
-		this.driveHeading(30, 26.57, false, 40, 108);
+		this.driveStraightDistance(1, true, 40);
+		this.driveStraightDistance(2, true, 25);
+		this.driveStraightDistance(7, false, 25);
+		this.driveHeading(30, 26.57, false, 40, 105);
 		this.driveStraightDistance(70, false, 40);
-		this.driveHeading(20, 153.43, false, 55, 245);
-		this.driveStraightDistance(90, false, 40);    
-		this.driveStraightDistance(90, true, 40);
-		this.driveHeading(30, 90, true, 40, 360);    
-		//this.driveStraightDistance(5, true, 40);
-		this.driveHeading(30, 90, true, 40, 440);
-		this.driveStraightDistance(90, true, 40);
-		this.driveStraightDistance(15, false, 40);
+		this.driveHeading(24, 160, false, 55, 245);
+		this.driveStraightDistance(90, false, 40); 
+		this.driveStraightDistance(5, false, 25);
+		this.driveStraightDistance(3, true, 25);   
+		this.driveStraightDistance(82, true, 40);
+		this.driveHeading(30, 90, true, 50, 360);    
+		this.driveStraightDistance(10, true, 40);
+		this.driveHeading(30, 90, true, 50, 440);
+		this.driveStraightDistance(85, true, 40);
+		this.driveStraightDistance(5, true, 25);
+		this.driveStraightDistance(5, false, 25);
+		this.driveStraightDistance(10, false, 40);
 		this.driveHeading(25, 90, false, 40, 540);
+		this.driveStraightDistance(10, false, 40);
 		isFinished();
 	}
 
