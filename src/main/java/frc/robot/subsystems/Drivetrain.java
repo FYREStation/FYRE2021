@@ -91,7 +91,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void tankDriving(double moveSpeedLeft, double moveSpeedRight) {
-        differentialDrive.tankDrive(moveSpeedLeft, moveSpeedRight);
+        if(Constants.invertedAxis){            
+            differentialDrive.tankDrive(moveSpeedLeft, moveSpeedRight);
+        }else{
+            differentialDrive.tankDrive(-moveSpeedRight, -moveSpeedLeft);
+        }    
     }
 
     public double getLeftDriveEncoderCount() {

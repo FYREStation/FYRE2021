@@ -20,13 +20,16 @@ public class DriveArcade extends CommandBase {
 	private Drivetrain drive_train;
 	private DoubleSupplier move_Speed;
 	private DoubleSupplier rotate_Speed;
-	public DriveArcade(Drivetrain driveTrain, DoubleSupplier moveSpeed, DoubleSupplier rotateSpeed) {
+	private DoubleSupplier XJoyStick;
+	private DoubleSupplier YJoyStick;
+
+	public DriveArcade(Drivetrain driveTrain, DoubleSupplier theY, DoubleSupplier theX) {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
 		
 		drive_train = driveTrain;
-		move_Speed = moveSpeed;
-		rotate_Speed = rotateSpeed;
+		XJoyStick = theX;
+		YJoyStick = theY;
 		addRequirements(drive_train);
 	}
 
@@ -40,8 +43,22 @@ public class DriveArcade extends CommandBase {
 	public void execute() {
 
 		//System.out.println(Constants.throttle * move_Speed.getAsDouble() + "and " + Constants.throttle *  rotate_Speed.getAsDouble());
+		double yValue = YJoyStick.getAsDouble();
+		double xValue = XJoyStick.getAsDouble();
+		if(yValue < 0.2 && yValue > -0.2){
+			yValue = 0.0;
+		} 
+		if(xValue < 0.2 && xValue > -0.2){
+			xValue = 0.0;
+		} 
 		
-		drive_train.arcadeDrive(Constants.throttle * move_Speed.getAsDouble(), Constants.throttle *  rotate_Speed.getAsDouble());
+
+		double leftPower = yValue - xValue;
+		double rightPower = yValue + xValue;
+		leftPower = -leftPower;
+		rightPower = -rightPower;
+		drive_train.tankDriving(Constants.throttle * leftPower, Constants.throttle * rightPower);
+		//drive_train.arcadeDrive(Constants.throttle * move_Speed.getAsDouble(), Constants.throttle * YJoyStick.getAsDouble());
 		
 	}
 
