@@ -24,7 +24,7 @@ public class ControlledShooting extends CommandBase {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	public void execute() {
-        m_shooter.shooterController.set(ControlMode.PercentOutput, 0.9);
+        m_shooter.shooterController.set(ControlMode.PercentOutput, 1.0);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
