@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.ShooterAndKick;
 
 public class ControlledShooting extends CommandBase {
@@ -24,7 +25,7 @@ public class ControlledShooting extends CommandBase {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	public void execute() {
-        m_shooter.shooterController.set(ControlMode.PercentOutput, 1.0);
+        m_shooter.shooterController.set(ControlMode.PercentOutput, Constants.shooterPower);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

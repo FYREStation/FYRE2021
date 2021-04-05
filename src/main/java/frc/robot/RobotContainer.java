@@ -19,6 +19,8 @@ import frc.robot.commands.InvertedTypeDrive;
 import frc.robot.commands.RunLiftUp;
 import frc.robot.commands.RunWinch;
 import frc.robot.commands.SetThrottle;
+import frc.robot.commands.ShooterPwrDown;
+import frc.robot.commands.ShooterPwrUp;
 import frc.robot.commands.ThrottleDown;
 import frc.robot.commands.ThrottleUp;
 import frc.robot.commands.RunLiftDown;
@@ -140,8 +142,10 @@ public class RobotContainer {
     D1.whileHeld(new ControlledShooting(shooterObject));
     D2.whileHeld(new KickForward(shooterObject));
     //D10.whileHeld(new KickBackward(shooterObject));
-    D3.whileHeld(new GetGameColor(controlPanelObject)); //This gets the color that FMS wants
-    D5.whileHeld(new PanelForward(controlPanelObject));
+    //D3.whileHeld(new GetGameColor(controlPanelObject)); //This gets the color that FMS wants
+    //D5.whileHeld(new PanelForward(controlPanelObject));
+    D3.toggleWhenPressed(new ShooterPwrUp());
+    D5.toggleWhenPressed(new ShooterPwrDown());
     D8.toggleWhenPressed(new PositionControl(controlPanelObject)); //This Detects Color
 
     X2.whenPressed(new SetThrottle());
