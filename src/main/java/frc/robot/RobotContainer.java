@@ -144,9 +144,9 @@ public class RobotContainer {
     //D10.whileHeld(new KickBackward(shooterObject));
     //D3.whileHeld(new GetGameColor(controlPanelObject)); //This gets the color that FMS wants
     //D5.whileHeld(new PanelForward(controlPanelObject));
-    D3.toggleWhenPressed(new ShooterPwrUp());
-    D5.toggleWhenPressed(new ShooterPwrDown());
-    D8.toggleWhenPressed(new PositionControl(controlPanelObject)); //This Detects Color
+    D3.whenPressed(new ShooterPwrUp());
+    D5.whenPressed(new ShooterPwrDown());
+    D8.whenPressed(new PositionControl(controlPanelObject)); //This Detects Color
 
     X2.whenPressed(new SetThrottle());
     X5.whenPressed(new ThrottleUp());
